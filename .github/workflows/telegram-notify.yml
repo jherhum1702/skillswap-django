@@ -47,19 +47,20 @@ jobs:
 
           # Construir mensaje
           if [ "$EVENT_NAME" = "push" ]; then
-            MESSAGE="$TELEGRAM_MENTION\n🚀 Nuevo push\nRepo: $REPO\nRama: $BRANCH\nAutor: $ACTOR\n$COMMITS"
+            MESSAGE="$TELEGRAM_MENTION 🚀 *Nuevo push en $REPO*\nRama: $BRANCH\nAutor: $ACTOR\nCommits:\n$COMMITS"
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "closed" ]; then
-              MESSAGE="$TELEGRAM_MENTION\n✅ PR cerrada\nRepo: $REPO\nRama origen: $BRANCH\nRama destino: $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\nVer PR: $PR_URL"
+              MESSAGE="$TELEGRAM_MENTION ✅ *PR cerrada*\nRepo: $REPO\nRama: $BRANCH → $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\n[Ver PR]($PR_URL)"
             else
-              MESSAGE="$TELEGRAM_MENTION\n🔀 Nueva PR\nRepo: $REPO\nRama origen: $BRANCH\nRama destino: $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\nVer PR: $PR_URL"
+              MESSAGE="$TELEGRAM_MENTION 🔀 *Nueva PR*\nRepo: $REPO\nRama: $BRANCH → $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\n[Ver PR]($PR_URL)"
             fi
           fi
 
-          # Enviar mensaje a Telegram usando parse_mode=HTML y <pre> para saltos de línea
+          # Enviar mensaje a Telegram usando Markdown
           curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
             -d chat_id=$CHAT_ID \
             -d message_thread_id=$THREAD_ID \
-            -d parse_mode=HTML \
-            --data-urlencode text="<pre>$MESSAGE</pre>"
+            -d parse_mode=Markdown \
+            --data-urlencode text="$MESSAGE"
+
 
