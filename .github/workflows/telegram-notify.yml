@@ -33,7 +33,7 @@ jobs:
           if [ "$EVENT_NAME" = "push" ]; then
             BRANCH=${{ github.ref_name }}
             for c in $(jq -r '.commits[] | "- " + .message + " (" + .url + ")"' <<< "${{ toJson(github.event) }}"); do
-              COMMITS="$COMMITS$c<br>"
+              COMMITS="$COMMITS$c\n"
             done
           fi
 
@@ -47,19 +47,19 @@ jobs:
 
           # Construir mensaje
           if [ "$EVENT_NAME" = "push" ]; then
-            MESSAGE="🚀 <b>Nuevo push</b><br><b>Repo:</b> $REPO<br><b>Rama:</b> $BRANCH<br><b>Autor:</b> $ACTOR<br>$COMMITS"
+            MESSAGE="$TELEGRAM_MENTION\n🚀 Nuevo push\nRepo: $REPO\nRama: $BRANCH\nAutor: $ACTOR\n$COMMITS"
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "closed" ]; then
-              MESSAGE="✅ <b>PR cerrada</b><br><b>Repo:</b> $REPO<br><b>Rama origen:</b> $BRANCH<br><b>Rama destino:</b> $BASE_BRANCH<br><b>Autor:</b> $ACTOR<br><b>Título:</b> $PR_TITLE<br><a href='$PR_URL'>Ver PR</a>"
+              MESSAGE="$TELEGRAM_MENTION\n✅ PR cerrada\nRepo: $REPO\nRama origen: $BRANCH\nRama destino: $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\nVer PR: $PR_URL"
             else
-              MESSAGE="🔀 <b>Nueva PR</b><br><b>Repo:</b> $REPO<br><b>Rama origen:</b> $BRANCH<br><b>Rama destino:</b> $BASE_BRANCH<br><b>Autor:</b> $ACTOR<br><b>Título:</b> $PR_TITLE<br><a href='$PR_URL'>Ver PR</a>"
+              MESSAGE="$TELEGRAM_MENTION\n🔀 Nueva PR\nRepo: $REPO\nRama origen: $BRANCH\nRama destino: $BASE_BRANCH\nAutor: $ACTOR\nTítulo: $PR_TITLE\nVer PR: $PR_URL"
             fi
           fi
 
-          # Enviar mensaje a Telegram
+          # Enviar mensaje a Telegram usando parse_mode=HTML y <pre> para saltos de línea
           curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
             -d chat_id=$CHAT_ID \
             -d message_thread_id=$THREAD_ID \
             -d parse_mode=HTML \
-            --data-urlencode text="$TELEGRAM_MENTION $MESSAGE"
+            --data-urlencode text="<pre>$MESSAGE</pre>"
 
