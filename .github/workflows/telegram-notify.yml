@@ -10,12 +10,11 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Set environment variables and send message
+      - name: Send Telegram Notification
         run: |
           EVENT_NAME=${{ github.event_name }}
           ACTOR=${{ github.actor }}
           REPO=${{ github.repository }}
-          BRANCH=${{ github.ref_name }}
           BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID=${{ secrets.TELEGRAM_THREAD_ID }}
@@ -23,30 +22,37 @@ jobs:
           # Mencionar a todos los miembros
           TELEGRAM_MENTION="@PhantomTear @Andresini_zX @Elcapodelpan"
 
-          # PR info solo si existe
+          # Inicializar variables
           PR_URL=""
           PR_TITLE=""
-          if [ "$EVENT_NAME" = "pull_request" ]; then
-            PR_URL="${{ github.event.pull_request.html_url }}"
-            PR_TITLE="${{ github.event.pull_request.title }}"
-          fi
-
-          # Lista de commits si es push
+          BRANCH=""
+          BASE_BRANCH=""
           COMMITS=""
+
+          # Si es push
           if [ "$EVENT_NAME" = "push" ]; then
+            BRANCH=${{ github.ref_name }}
             for c in $(jq -r '.commits[] | "- " + .message + " (" + .url + ")"' <<< "${{ toJson(github.event) }}"); do
-              COMMITS="$COMMITS$c\n"
+              COMMITS="$COMMITS$c<br>"
             done
           fi
 
-          # Construir mensaje según evento
+          # Si es PR
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            PR_URL="${{ github.event.pull_request.html_url }}"
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            BRANCH="${{ github.event.pull_request.head.ref }}"
+            BASE_BRANCH="${{ github.event.pull_request.base.ref }}"
+          fi
+
+          # Construir mensaje
           if [ "$EVENT_NAME" = "push" ]; then
-            MESSAGE="🚀 <b>Nuevo push</b>\n<b>Repo:</b> $REPO\n<b>Rama:</b> $BRANCH\n<b>Autor:</b> $ACTOR\n$COMMITS"
+            MESSAGE="🚀 <b>Nuevo push</b><br><b>Repo:</b> $REPO<br><b>Rama:</b> $BRANCH<br><b>Autor:</b> $ACTOR<br>$COMMITS"
           elif [ "$EVENT_NAME" = "pull_request" ]; then
             if [ "${{ github.event.action }}" = "closed" ]; then
-              MESSAGE="✅ <b>PR cerrada</b>\n<b>Repo:</b> $REPO\n<b>Rama:</b> $BRANCH\n<b>Autor:</b> $ACTOR\n<b>Título:</b> $PR_TITLE\n<a href='$PR_URL'>Ver PR</a>"
+              MESSAGE="✅ <b>PR cerrada</b><br><b>Repo:</b> $REPO<br><b>Rama origen:</b> $BRANCH<br><b>Rama destino:</b> $BASE_BRANCH<br><b>Autor:</b> $ACTOR<br><b>Título:</b> $PR_TITLE<br><a href='$PR_URL'>Ver PR</a>"
             else
-              MESSAGE="🔀 <b>Nueva PR</b>\n<b>Repo:</b> $REPO\n<b>Rama:</b> $BRANCH\n<b>Autor:</b> $ACTOR\n<b>Título:</b> $PR_TITLE\n<a href='$PR_URL'>Ver PR</a>"
+              MESSAGE="🔀 <b>Nueva PR</b><br><b>Repo:</b> $REPO<br><b>Rama origen:</b> $BRANCH<br><b>Rama destino:</b> $BASE_BRANCH<br><b>Autor:</b> $ACTOR<br><b>Título:</b> $PR_TITLE<br><a href='$PR_URL'>Ver PR</a>"
             fi
           fi
 
@@ -56,3 +62,4 @@ jobs:
             -d message_thread_id=$THREAD_ID \
             -d parse_mode=HTML \
             --data-urlencode text="$TELEGRAM_MENTION $MESSAGE"
+
