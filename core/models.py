@@ -373,7 +373,7 @@ class Acuerdo(models.Model):
         ordering = ['usuario_a']
         constraints = [
             models.UniqueConstraint(
-                fields=['usuario_b', 'usuario_a', 'habilidades_tradea_a', 'habilidades_tradea_b'],
+                fields=['usuario_a', 'usuario_b', 'habilidad_tradea_a', 'habilidad_tradea_b'],
                 condition=models.Q(estado__in=['PROPUESTO', 'ACEPTADO', 'EN CURSO']),
                 name = 'unique_acuerdo_activo'
             )
@@ -516,4 +516,4 @@ class Sesion(models.Model):
         db_table = 'sesion'
         verbose_name = 'sesion'
         verbose_name_plural = 'sesiones'
-        ordering = ['nombre']
+        ordering = ('fecha',)
