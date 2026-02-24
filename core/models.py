@@ -509,7 +509,7 @@ class Sesion(models.Model):
         ValidationError: The agreement status must be ongoing.
         """
 
-        if self.acuerdo.estado != 'En Curso':
+        if self.acuerdo.estado != 'EN CURSO':
             raise ValidationError('The agreement status must be ongoing.')
 
     class Meta:
