@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}
+	Registro
+{% endblock %}
+{% block content %}
+	<form action="{% url 'core:registro' %}"  method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="button" value="Registrase">
+    </form>
+    <form action="{% url 'core:login' %}">
+    <label>¿Ya tienes cuenta?</label>
+    <input type="button" value="Iniciar sesion">
+    </form>
+{% endblock %}
