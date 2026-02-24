@@ -1,7 +1,3 @@
-from Tools.i18n.msgfmt import usage
-
-from django.contrib.auth import user_logged_in
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login

@@ -7,13 +7,13 @@
     <div class="row justify-content-center py-5" >
         <div class="col-md-6 col-lg-4 py-5" >
             <div class="card shadow p-4">  <!-- padding interno -->
-                <h3 class="text-center mb-4">Registro</h3>
+                <h3 class="text-center mb-4">Iniciar sesion</h3>
                 <form action="{% url 'core:login' %}" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <input type="hidden" name="next" value="{% url 'core:home' %}">
                     <button type="submit" class="btn btn-primary w-100 mt-3">
-                        🚀 Registrarse
+                         Iniciar sesion
                     </button>
                 </form>
             </div>

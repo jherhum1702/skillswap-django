@@ -1,12 +1,45 @@
+import email
+
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from django.core.exceptions import ValidationError
-from disposable_emails.contrib.django import disposable_validator
 from django.contrib.auth import authenticate
 from .models import * # tu modelo custom
-from django.contrib.auth import get_user_model
+import requests as req
+
+# EMAIL BLOCK LIST
+lista = req.get("https://gist.githubusercontent.com/ammarshah/f5c2624d767f91a7cbdc4e54db8dd0bf/raw")
+contenido = lista.text
+lista_email_block = set(contenido.split("\n"))
+lista_email_block.add('pazuric.com')
+
+
+
 
 class CustomUserCreationForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+
+        self.fields['password1'].widget.attrs.update({
+            'class':'form-control',
+            'pattern':'^[a-zA-Z0-9_]+$',
+            'required':True,
+            'placeholder':'Enter your Password',
+        })
+
+        self.fields['password2'].widget.attrs.update({
+            'class': 'form-control',
+            'pattern': '^[a-zA-Z0-9_]+$',
+            'required': True,
+            'placeholder': 'Enter your Password',
+        })
+
+
+
+
+
     class Meta:
         model = Usuario
         fields = ("username","alias" ,"email",)
@@ -28,16 +61,15 @@ class CustomUserCreationForm(UserCreationForm):
                 'pattern':'^[a-zA-Z0-9_]+$',
                 'required': True,
             }),
-            'password1': forms.PasswordInput(attrs={
-                'class':'form-control form-control-sm',
-                'placeholder':'Enter your Password',
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'class':'form-control form-control-sm',
-                'placeholder':'Enter your Password',
-            })
         }
-    email = forms.EmailField(validators=[disposable_validator]) #teporal email
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        domain = email.split('@')[1]
+
+        if domain in lista_email_block:
+            raise forms.ValidationError("this email is not valid")
+
+        return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -50,9 +82,29 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 
+
+
+
 class CustomloginForm(AuthenticationForm):
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'class':'form-control',
+            'required':True,
+            'placeholder':'Enter the alias or email',
+        })
+
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control',
+            'required': True,
+            'placeholder': 'Enter your Password',
+        })
+
+
     username = forms.CharField(label="Alias/Email")
-    password = forms.CharField(label="Password", widget=forms.PasswordInput, required=True)
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput, required=True)
 
     def clean(self):
         username = self.cleaned_data.get('username')

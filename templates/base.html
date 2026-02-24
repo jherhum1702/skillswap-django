@@ -58,7 +58,8 @@
                                 <form method="post" action="{% url 'core:logout' %}" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item border-0 bg-transparent w-100 text-start" onclick="return confirm('¿Cerrar sesión?')">
-                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</button>
+                                </form>
                             </ul>
 
                     {% else %}
@@ -68,7 +69,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light ms-2" href="{% url 'core:registro' %}">
+                            <a class="nav-link btn s ms-2" href="{% url 'core:registro' %}">
                                 Registrarse
                             </a>
                         </li>
@@ -99,10 +100,10 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="footer mt-5 py-4">
-        <div class="container text-center">
+    <footer class="footer fixed-bottom py-2" style="background-color: #0D6EFD">
+        <div class="container text-center" >
             <p class="mb-0 text-muted">
-                &copy; 2026 SkillSwap. Hecho con <i class="fas fa-heart text-danger"></i> por Fabian.
+                &copy; 2026 SkillSwap. Todos los derechos reservados para el grupo 4 (Jose, Andres y Fabian)
             </p>
         </div>
     </footer>
