@@ -1,2 +1,4 @@
 django
+psycopg[binary]
+python-dotenv>=1.0.0
 disposable-email-domains
