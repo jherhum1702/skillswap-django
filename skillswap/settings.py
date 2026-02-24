@@ -127,4 +127,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-AUTH_USER_MODEL = 'core.Usuario'
+AUTH_USER_MODEL= 'core.Usuario'
+
+LOGOUT_REDIRECT_URL='core:home'
+LOGIN_REDIRECT_URL = 'core:home'
