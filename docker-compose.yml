@@ -40,6 +40,8 @@ services:
       - web
     networks:
       - net
+    profiles:
+      - production
 
 networks:
   net:
