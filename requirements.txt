@@ -1,2 +1,2 @@
 django
-disposable-emails
+disposable-email-domains
