@@ -22,7 +22,11 @@ class Postview(ListView):
 
 
 class CustomLogin(LoginView):
-    pass
+    form_class = CustomloginForm
+    template_name = 'registration/login.html'
+
+    def get_success_url(self):
+        return reverse_lazy('core:home')
 
 
 
