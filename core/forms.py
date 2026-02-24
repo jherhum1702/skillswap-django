@@ -96,7 +96,7 @@ class CustomUserCreationForm(UserCreationForm):
         widgets = {
             'username': forms.TextInput(attrs={
                 'class':'form-control',
-                'placeholder':'Enter the username ',
+                'placeholder':'Enter your username',
                 'pattern':'^[a-zA-Z0-9_]+$',
                 'required':True,
             }),
@@ -142,7 +142,7 @@ class CustomUserCreationForm(UserCreationForm):
         email = self.cleaned_data['email']
         domain = email.split('@')[1]
         if domain in blocklist:
-            raise forms.ValidationError("this email is not valid")
+            raise forms.ValidationError("This email is not valid")
         return email
 
 
@@ -290,7 +290,7 @@ class CustomloginForm(AuthenticationForm):
         self.user_cache = authenticate(self.request, username=username, password=password)
 
         if self.user_cache is None:
-            raise forms.ValidationError("Alias/Email o contraseña incorrectos")
+            raise forms.ValidationError("Incorrect Alias/Email or password")
 
         self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
