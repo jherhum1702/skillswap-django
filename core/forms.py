@@ -15,18 +15,31 @@ class CustomUserCreationForm(UserCreationForm):
                 'class':'form-control',
                 'placeholder':'Enter the username ',
                 'pattern':'^[a-zA-Z0-9_]+$',
+                'required':True,
             }),
             'email': forms.EmailInput(attrs={
                 'class':'form-control',
                 'placeholder':'Enter your email address',
+                'required': True,
             }),
             'alias': forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder':'Enter your Nickname',
                 'pattern':'^[a-zA-Z0-9_]+$',
+                'required': True,
             })
         }
     email = forms.EmailField(validators=[disposable_validator]) #teporal email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if hasattr(user, 'alias'):
+            user.alias = self.cleaned_data['alias']
+        if commit:
+            user.save()
+            self.save_m2m()
+        return user
 
 
 

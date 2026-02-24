@@ -27,11 +27,11 @@ class CustomLogin(LoginView):
 
 
 class CustomRegisterView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = 'registration/registration.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('core:home')
 
-    def form_invalid(self, form):
+    def form_valid(self, form):
         user = form.save()
         user_group, created = Group.objects.get_or_create(name='Usuario')
         user.groups.add(user_group)
