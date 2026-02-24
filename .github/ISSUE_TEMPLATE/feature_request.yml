@@ -1,0 +1,26 @@
+name: Feature request ✨
+description: Suggest a new feature for SkillSwap
+title: "[Enhancement] "
+labels: ["enhancement"]
+
+body:
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should this feature do?
+      placeholder: Describe what this feature should do...
+    validations:
+      required: true
