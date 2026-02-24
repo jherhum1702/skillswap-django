@@ -3,7 +3,7 @@
 	Registro
 {% endblock %}
 {% block content %}
-	<form>
+	<form action="{% url 'core:registro' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Registrase" class="btn btn-primary">
