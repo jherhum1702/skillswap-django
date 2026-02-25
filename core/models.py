@@ -36,25 +36,27 @@ class Usuario(AbstractUser):
     Represents a registered user in SkillSwap with auth and profile info.
 
     Attributes:
-        nombre (str): Username (max 100 characters)
-        alias (str): User alias for search (max 16 characters, unique)
+        first_name (str): User's name (max 100 characters)
+        last_name (str): User's last names (max 200 characters)
+        username (str): User username for search (max 16 characters, unique)
         email (str): User email address (Unique)
 
     Example:
         >>> usuario = Usuario.objects.create(
-        ...     nombre="Paco Tester",
-        ...     alias="pacogamer30",
+        ...     first_name="Paco",
+        ...     username="pacogamer30",
         ...     email="pacotest@gmail.com"
         ...     )
         >>> usuario.save()
     """
-    nombre = models.CharField(max_length=100)
-    alias = models.CharField(max_length=16, unique=True) # Represents a user alias (e.g. @JohnPork)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=200, blank=True)
+    username = models.CharField(max_length=16, unique=True) # Represents a user username (e.g. @JohnPork)
     email = models.EmailField(unique=True)
     # is_active - 'Estado' attribute. Python is faster checking for a boolean rather than a string - FROM AbstractUser !!
 
-    USERNAME_FIELD = "alias"
-    REQUIRED_FIELDS = ["email", "nombre"]
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "first_name", 'last_name']
 
     def __str__(self):
         """
@@ -63,27 +65,27 @@ class Usuario(AbstractUser):
         Args:
             self: User instance
 
-        Format: [nombre] (user's name) - e.g., "Paco Tester"
+        Format: [first_name] [last_name] (user's name) - e.g., "Paco Tester"
 
         Returns:
             str: User's full name.
 
         Example:
             >>> usuario = Usuario.objects.create(
-            ...     nombre="Paco Tester",
-            ...     alias="pacogamer30",
+            ...     first_name="Paco Tester",
+            ...     username="pacogamer30",
             ...     email="pacotest@gmail.com"
             ...     )
             >>> usuario.save()
             >>> print(usuario)
         """
-        return self.nombre
+        return f"{self.first_name} {self.last_name} "
 
     class Meta:
         db_table = 'usuario'
         verbose_name = 'usuario'
         verbose_name_plural = 'usuarios'
-        ordering = ['nombre']
+        ordering = ['first_name']
 
 
 def timezone_choices():
@@ -135,8 +137,8 @@ class Perfil(models.Model):
 
     Example:
         >>> usuario = Usuario.objects.create(
-        ...     nombre="Paco Tester",
-        ...     alias="pacogamer30",
+        ...     first_name="Paco Tester",
+        ...     username="pacogamer30",
         ...     email="pacotest@gmail.com"
         ...     )
         >>> usuario.save()
@@ -173,8 +175,8 @@ class Perfil(models.Model):
 
         Example:
             >>> usuario = Usuario.objects.create(
-            ...     nombre="Paco Tester",
-            ...     alias="pacogamer30",
+            ...     first_name="Paco Tester",
+            ...     username="pacogamer30",
             ...     email="pacotest@gmail.com"
             ...     )
             >>> usuario.save()
@@ -217,8 +219,8 @@ class Publicacion(models.Model):
 
     Example:
         >>> usuario = Usuario.objects.create(
-        ...     nombre="Paco Tester",
-        ...     alias="pacogamer30",
+        ...     first_name="Paco Tester",
+        ...     username="pacogamer30",
         ...     email="pacotest@gmail.com"
         ...     )
         >>> usuario.save()
@@ -269,14 +271,14 @@ class Acuerdo(models.Model):
 
     Example:
         >>> usuario_a = Usuario.objects.create(
-        ...     nombre="Paco Tester",
-        ...     alias="pacogamer30",
+        ...     first_name="Paco Tester",
+        ...     username="pacogamer30",
         ...     email="pacotest@gmail.com"
         ...     )
         >>> usuario_a.save()
         >>> usuario_b = Usuario.objects.create(
-        ...     nombre="Manolita Tester",
-        ...     alias="manola33",
+        ...     first_name="Manolita Tester",
+        ...     username="manola33",
         ...     email="manolagamer@outlook.com"
         ...     )
         >>> usuario_b.save()
@@ -338,8 +340,8 @@ class Acuerdo(models.Model):
 
         Example:
             >>> from django.core.exceptions import ValidationError
-            >>> usuario_a = Usuario.objects.create(nombre="Paco", alias="paco30", email="paco@test.com")
-            >>> usuario_b = Usuario.objects.create(nombre="Ana", alias="ana33", email="ana@test.com")
+            >>> usuario_a = Usuario.objects.create(first_name="Paco", username="paco30", email="paco@test.com")
+            >>> usuario_b = Usuario.objects.create(first_name="Ana", username="ana33", email="ana@test.com")
             >>> acuerdo_mismo_usuario = Acuerdo(usuario_a=usuario_a, usuario_b=usuario_a, semanas=4, mins_sesion=60, sesiones_por_semana=3, condiciones="Test", habilidad_tradea_a=habilidad_a, habilidad_tradea_b=habilidad_b)
             >>> acuerdo_mismo_usuario.clean()
             Traceback (most recent call last):
@@ -420,8 +422,8 @@ class Sesion(models.Model):
         acuerdo (Acuerdo): The SkillSwap agreement that this session is part of
 
     Example:
-        >>> usuario_a = Usuario.objects.create(nombre="Paco Tester", alias="pacogamer30", email="pacotest@gmail.com")
-        >>> usuario_b = Usuario.objects.create(nombre="Manolita Tester", alias="manola33", email="manolagamer@outlook.com")
+        >>> usuario_a = Usuario.objects.create(first_name="Paco Tester", username="pacogamer30", email="pacotest@gmail.com")
+        >>> usuario_b = Usuario.objects.create(first_name="Manolita Tester", username="manola33", email="manolagamer@outlook.com")
         >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", estado=True)
         >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", estado=True)
         >>> acuerdo = Acuerdo.objects.create(
@@ -473,8 +475,8 @@ class Sesion(models.Model):
                 - Invalid agreement status ('En Curso' only),
 
         Example:
-        >>> usuario_a = Usuario.objects.create(nombre="Paco Tester", alias="pacogamer30", email="pacotest@gmail.com")
-        >>> usuario_b = Usuario.objects.create(nombre="Manolita Tester", alias="manola33", email="manolagamer@outlook.com")
+        >>> usuario_a = Usuario.objects.create(first_name="Paco Tester", username="pacogamer30", email="pacotest@gmail.com")
+        >>> usuario_b = Usuario.objects.create(first_name="Manolita Tester", username="manola33", email="manolagamer@outlook.com")
         >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", estado=True)
         >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", estado=True)
         >>> acuerdo = Acuerdo.objects.create(

@@ -28,12 +28,12 @@ class UsuarioAdmin(admin.ModelAdmin):
         >>> skill.descripcion = "Build REST APIs with Django"
         >>> skill.save()
     """
-    list_display = ('username','alias','email', 'get_grupos')
-    search_fields = ('username','alias','email')
-    list_filter = ('username','alias','email')
+    list_display = ('username','email', 'get_grupos')
+    search_fields = ('username','email')
+    list_filter = ('username','email')
     fieldsets = (
         ('Datos', {
-            'fields': ('username', 'email', 'alias', 'password')
+            'fields': ('username', 'email', 'password')
         }),
         ('Permisos', {
             'fields': ('groups',)
@@ -41,7 +41,7 @@ class UsuarioAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('groups',)
 
-    class meta:
+    class Meta:
         """
         Meta configuration for Usuario model.
 
