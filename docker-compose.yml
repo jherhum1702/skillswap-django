@@ -18,6 +18,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    ports:
+      - "8000:8000"
     restart: unless-stopped
     networks:
       - net

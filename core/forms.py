@@ -30,7 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
     Example:
         >>> form = CustomUserCreationForm(data={
         ...     'username': 'john_doe',
-        ...     'alias': 'johnny',
         ...     'email': 'john@gmail.com',
         ...     'password1': 'SecurePass123',
         ...     'password2': 'SecurePass123',
