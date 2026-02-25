@@ -53,6 +53,9 @@ class Usuario(AbstractUser):
     email = models.EmailField(unique=True)
     # is_active - 'Estado' attribute. Python is faster checking for a boolean rather than a string - FROM AbstractUser !!
 
+    USERNAME_FIELD = "alias"
+    REQUIRED_FIELDS = ["email", "nombre"]
+
     def __str__(self):
         """
         Returns the string representation of the user.
