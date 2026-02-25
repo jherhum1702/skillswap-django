@@ -91,8 +91,18 @@ class CustomUserCreationForm(UserCreationForm):
             they are not model fields and must be styled via __init__ instead.
         """
         model = Usuario
-        fields = ("username" ,"email",)
+        fields = ("username",'first_name','last_name',"email")
         widgets = {
+            'first_name': forms.TextInput(attrs={
+               'class':'form-control',
+                'placeholder':'Enter your first name',
+                'required': True,
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your first name',
+                'required': True,
+            }),
             'username': forms.TextInput(attrs={
                 'class':'form-control',
                 'placeholder':'Enter your username',
@@ -104,7 +114,6 @@ class CustomUserCreationForm(UserCreationForm):
                 'placeholder':'Enter your email address',
                 'required': True,
             }),
-
         }
 
 
@@ -132,7 +141,6 @@ class CustomUserCreationForm(UserCreationForm):
             >>> form.errors['email']
             ['this email is not valid']
         """
-
         email = self.cleaned_data['email']
         domain = email.split('@')[1]
         if domain in blocklist:
@@ -164,12 +172,12 @@ class CustomUserCreationForm(UserCreationForm):
             ...     user = form.save(commit=False)  # returns unsaved instance
         """
         user = super().save(commit=False)
+        user.username = self.cleaned_data['username'].lower()
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
         user.email = self.cleaned_data['email']
-        if hasattr(user, 'username'):
-            user.username = self.cleaned_data['username']
         if commit:
             user.save()
-            self.save_m2m()
         return user
 
 
@@ -179,6 +187,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomloginForm(AuthenticationForm):
+
     """
     Custom login form for the SkillSwap platform.
 
@@ -228,7 +237,7 @@ class CustomloginForm(AuthenticationForm):
         self.fields['username'].widget.attrs.update({
             'class':'form-control',
             'required':True,
-            'placeholder':'Enter the alias or email',
+            'placeholder':'Enter the usernmae or email',
         })
 
         self.fields['password'].widget.attrs.update({
@@ -238,7 +247,7 @@ class CustomloginForm(AuthenticationForm):
         })
 
 
-    username = forms.CharField(label="Alias/Email")
+    username = forms.CharField(label="Username/Email")
     password = forms.CharField(label="Contraseña", widget=forms.PasswordInput, required=True)
 
     def clean(self):
@@ -275,16 +284,16 @@ class CustomloginForm(AuthenticationForm):
             if '@' in username:
                 user = Usuario.objects.get(email__iexact=username)
             else:
-                user = Usuario.objects.get(username__iexact=username)  # ← ALIAS!
+                user = Usuario.objects.get(username__iexact=username)
             username = user.username
 
         except Usuario.DoesNotExist:
-            raise forms.ValidationError("Alias/Email no registrado")
+            raise forms.ValidationError("Username/Email no registrado")
 
         self.user_cache = authenticate(self.request, username=username, password=password)
 
         if self.user_cache is None:
-            raise forms.ValidationError("Incorrect Alias/Email or password")
+            raise forms.ValidationError("Incorrect Username/Email or password")
 
         self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
