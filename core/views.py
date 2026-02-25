@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from .forms import *
 from django.views.decorators.http import require_http_methods
 
