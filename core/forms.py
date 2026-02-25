@@ -30,7 +30,6 @@ class CustomUserCreationForm(UserCreationForm):
     Example:
         >>> form = CustomUserCreationForm(data={
         ...     'username': 'john_doe',
-        ...     'alias': 'johnny',
         ...     'email': 'john@gmail.com',
         ...     'password1': 'SecurePass123',
         ...     'password2': 'SecurePass123',
@@ -92,7 +91,7 @@ class CustomUserCreationForm(UserCreationForm):
             they are not model fields and must be styled via __init__ instead.
         """
         model = Usuario
-        fields = ("username","alias" ,"email",)
+        fields = ("username" ,"email",)
         widgets = {
             'username': forms.TextInput(attrs={
                 'class':'form-control',
@@ -105,12 +104,7 @@ class CustomUserCreationForm(UserCreationForm):
                 'placeholder':'Enter your email address',
                 'required': True,
             }),
-            'alias': forms.TextInput(attrs={
-                'class':'form-control',
-                'placeholder':'Enter your Nickname',
-                'pattern':'^[a-zA-Z0-9_]+$',
-                'required': True,
-            }),
+
         }
 
 
@@ -171,8 +165,8 @@ class CustomUserCreationForm(UserCreationForm):
         """
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
-        if hasattr(user, 'alias'):
-            user.alias = self.cleaned_data['alias']
+        if hasattr(user, 'username'):
+            user.username = self.cleaned_data['username']
         if commit:
             user.save()
             self.save_m2m()
@@ -281,7 +275,7 @@ class CustomloginForm(AuthenticationForm):
             if '@' in username:
                 user = Usuario.objects.get(email__iexact=username)
             else:
-                user = Usuario.objects.get(alias__iexact=username)  # ← ALIAS!
+                user = Usuario.objects.get(username__iexact=username)  # ← ALIAS!
             username = user.username
 
         except Usuario.DoesNotExist:
