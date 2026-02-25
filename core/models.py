@@ -152,7 +152,7 @@ class Perfil(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='perfil', related_query_name='perfil')
     biografia = models.CharField(max_length=200, blank=True)
     zona_horaria = models.CharField(max_length=100, choices=timezone_choices(), default='Europe/Madrid')
-    disponibilidad = models.TextField()
+    disponibilidad = models.TextField(default='Add your availability here\nAñade tu disponibilidad aquí')
     preferencias = models.JSONField(default=default_preferencias, blank=True)
 
     habilidades = models.ManyToManyField(Habilidad, blank=True, related_name='perfil', related_query_name='perfil')
