@@ -16,19 +16,16 @@ class Habilidad(models.Model):
 
     Attributes:
         nombre (str): Skill name (max 100 characters, unique)
-        categoria (str): Skill category (max 100 characters, unique)
         estado (bool): Represents if your skill is active or not (max 100 characters, unique)
 
     Example:
         >>> habilidad = Habilidad.objects.create(
         ...     nombre="Photoshop",
-        ...     categoria="Software",
         ...     estado=True
         ...     )
         >>> habilidad.save()
     """
     nombre = models.CharField(max_length=100, unique=True)
-    categoria = models.CharField(max_length=100, blank=True)
     estado = models.BooleanField(default=True)
 
 
@@ -227,7 +224,6 @@ class Publicacion(models.Model):
         >>> usuario.save()
         >>> habilidad = Habilidad.objects.create(
         ...     nombre="Photoshop",
-        ...     categoria="Software",
         ...     estado=True
         ...     )
         >>> habilidad.save()
@@ -286,13 +282,11 @@ class Acuerdo(models.Model):
         >>> usuario_b.save()
         >>> habilidad_a = Habilidad.objects.create(
         ...     nombre="Photoshop",
-        ...     categoria="Software",
         ...     estado=True
         ...     )
         >>> habilidad_a.save()
         >>> habilidad_b = Habilidad.objects.create(
         ...     nombre="Inglés",
-        ...     categoria="Idioma",
         ...     estado=True
         ...     )
         >>> habilidad_b.save()
@@ -346,8 +340,6 @@ class Acuerdo(models.Model):
             >>> from django.core.exceptions import ValidationError
             >>> usuario_a = Usuario.objects.create(nombre="Paco", alias="paco30", email="paco@test.com")
             >>> usuario_b = Usuario.objects.create(nombre="Ana", alias="ana33", email="ana@test.com")
-            >>> habilidad_a = Habilidad.objects.create(nombre="Python", categoria="Programación", estado=True)
-            >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", categoria="Idioma", estado=True)
             >>> acuerdo_mismo_usuario = Acuerdo(usuario_a=usuario_a, usuario_b=usuario_a, semanas=4, mins_sesion=60, sesiones_por_semana=3, condiciones="Test", habilidad_tradea_a=habilidad_a, habilidad_tradea_b=habilidad_b)
             >>> acuerdo_mismo_usuario.clean()
             Traceback (most recent call last):
@@ -430,8 +422,8 @@ class Sesion(models.Model):
     Example:
         >>> usuario_a = Usuario.objects.create(nombre="Paco Tester", alias="pacogamer30", email="pacotest@gmail.com")
         >>> usuario_b = Usuario.objects.create(nombre="Manolita Tester", alias="manola33", email="manolagamer@outlook.com")
-        >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", categoria="Software", estado=True)
-        >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", categoria="Idioma", estado=True)
+        >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", estado=True)
+        >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", estado=True)
         >>> acuerdo = Acuerdo.objects.create(
         ...     usuario_a=usuario_a,
         ...     usuario_b=usuario_b,
@@ -483,8 +475,8 @@ class Sesion(models.Model):
         Example:
         >>> usuario_a = Usuario.objects.create(nombre="Paco Tester", alias="pacogamer30", email="pacotest@gmail.com")
         >>> usuario_b = Usuario.objects.create(nombre="Manolita Tester", alias="manola33", email="manolagamer@outlook.com")
-        >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", categoria="Software", estado=True)
-        >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", categoria="Idioma", estado=True)
+        >>> habilidad_a = Habilidad.objects.create(nombre="Photoshop", estado=True)
+        >>> habilidad_b = Habilidad.objects.create(nombre="Inglés", estado=True)
         >>> acuerdo = Acuerdo.objects.create(
         ...     usuario_a=usuario_a,
         ...     usuario_b=usuario_b,

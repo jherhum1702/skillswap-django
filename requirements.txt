@@ -1,4 +1,5 @@
 django
 psycopg[binary]
 python-dotenv>=1.0.0
+gunicorn
 disposable-email-domains
