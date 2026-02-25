@@ -28,12 +28,12 @@ class UsuarioAdmin(admin.ModelAdmin):
         >>> skill.descripcion = "Build REST APIs with Django"
         >>> skill.save()
     """
-    list_display = ('username','alias','email', 'get_grupos')
-    search_fields = ('username','alias','email')
-    list_filter = ('username','alias','email')
+    list_display = ('username','first_name','last_name','email', 'get_grupos','is_active')
+    search_fields = ('username','first_name','email')
+    list_filter = ('username','first_name','email')
     fieldsets = (
         ('Datos', {
-            'fields': ('username', 'email', 'alias', 'password')
+            'fields': ('username', 'email', 'first_name', 'password')
         }),
         ('Permisos', {
             'fields': ('groups',)
