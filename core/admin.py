@@ -41,10 +41,9 @@ class UsuarioAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ('groups',)
 
-    class meta:
+    class Meta:
         """
         Meta configuration for Usuario model.
-
         Defines display and ordering options for the Django admin panel.
 
         Attributes:
