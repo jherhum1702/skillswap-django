@@ -6,8 +6,8 @@ services:
     container_name: django_web
     command: >
       sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput --clear &&
-             gunicorn skillswap.wsgi"
+             python manage.py collectstatic --noinput &&
+             gunicorn skillswap.wsgi --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     env_file:
