@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="{% if theme == 'dark' %}dark{% else %}light{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +20,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'core:home' %}">
+            <a class="navbar-brand" href="{% url 'core:post' %}">
                 <i class="fas fa-rocket me-2"></i>SkillSwap
             </a>
 
@@ -33,14 +33,53 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:home' %}">Inicio</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:post' %}">Posts</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" s>Acuerdos</a>
+                            <a class="nav-link">Acuerdos</a>
                         </li>
                     {% endif %}
                 </ul>
 
                 <ul class="navbar-nav">
+                    <!-- Botón cambiar tema -->
+                    <li class="nav-item d-flex align-items-center">
+                        <form method="post" action="{% url 'core:change_preference'%}" style="display: inline;">
+                            {% csrf_token %}
+                            {% if theme == 'dark' %}
+                                <input type="hidden" name="theme" value="light">
+                                <button type="submit" class="btn btn-light btn-sm" title="Cambiar a tema claro">
+                                    <i class="fas fa-sun"></i>
+                                </button>
+                            {% else %}
+                                <input type="hidden" name="theme" value="dark">
+                                <button type="submit" class="btn btn-dark btn-sm" title="Cambiar a tema oscuro">
+                                    <i class="fas fa-moon"></i>
+                                </button>
+                            {% endif %}
+                        </form>
+                    </li>
+
+                    <!-- Botón cambiar idioma -->
+                    <li class="nav-item d-flex align-items-center ms-2">
+                        <form method="post" action="{% url 'core:change_preference'%}" style="display: inline;">
+                            {% csrf_token %}
+                            {% if lang == 'es' %}
+                                <input type="hidden" name="lang" value="en">
+                                <button type="submit" class="btn btn-outline-light btn-sm" title="Switch to English">
+                                    EN
+                                </button>
+                            {% else %}
+                                <input type="hidden" name="lang" value="es">
+                                <button type="submit" class="btn btn-outline-light btn-sm" title="Cambiar a Español">
+                                    ES
+                                </button>
+                            {% endif %}
+                        </form>
+                    </li>
+
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -51,7 +90,7 @@
                                     <small>{{ user.email }}</small>
                                 </span></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'core:profile' %}">
+                                <li><a class="dropdown-item">
                                     <i class="fas fa-user me-2"></i>Mi Perfil
                                 </a></li>
                               <li>
