@@ -333,8 +333,8 @@ class ProfileForm(forms.ModelForm):
                 nombre = n.strip().lower().capitalize()  # "python" y "Python" → "Python"
                 if nombre:
                     habilidad, _ = Habilidad.objects.get_or_create(
-                        nombre__iexact=nombre,  # busca sin importar mayúsculas
-                        defaults={'nombre': nombre}  # si no existe, la crea con capitalize
+                        nombre__iexact=nombre,
+                        defaults={'nombre': nombre}
                     )
                     habilidades.append(habilidad)
             profile.habilidades.set(habilidades)

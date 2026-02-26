@@ -179,5 +179,5 @@ class ProfileUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.perfil
 
-    def get_success_url(self, queryset=None):
+    def get_success_url(self):
         return reverse_lazy('core:profile')
