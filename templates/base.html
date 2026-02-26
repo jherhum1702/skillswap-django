@@ -44,8 +44,9 @@
                 </ul>
 
                 <ul class="navbar-nav">
-                    <!-- Botón cambiar tema -->
-                    <li class="nav-item d-flex align-items-center">
+                    <!-- Botones cambiar tema e idioma -->
+                    <li class="nav-item d-flex align-items-center gap-2">
+                        <!-- Botón cambiar tema -->
                         <form method="post" action="{% url 'core:change_preference'%}" style="display: inline;">
                             {% csrf_token %}
                             {% if theme == 'dark' %}
@@ -60,10 +61,8 @@
                                 </button>
                             {% endif %}
                         </form>
-                    </li>
 
-                    <!-- Botón cambiar idioma -->
-                    <li class="nav-item d-flex align-items-center ms-2">
+                        <!-- Botón cambiar idioma -->
                         <form method="post" action="{% url 'core:change_preference'%}" style="display: inline;">
                             {% csrf_token %}
                             {% if lang == 'es' %}
@@ -108,7 +107,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn s ms-2" href="{% url 'core:registro' %}">
+                            <a class="nav-link" href="{% url 'core:registro' %}">
                                 Registrarse
                             </a>
                         </li>
