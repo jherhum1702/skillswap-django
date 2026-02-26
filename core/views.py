@@ -1,13 +1,11 @@
-from cProfile import Profile
 
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from .forms import *
-
+from .models import *
 
 # Create your views here.
 
@@ -165,7 +163,7 @@ class CustomRegisterView(CreateView):
 
 
 class ProfileView(DetailView):
-    model = Profile
+    model = Perfil
     template_name = 'core/profile.html'
     context_object_name = 'profile'
 
@@ -173,10 +171,13 @@ class ProfileView(DetailView):
         return self.request.user.perfil
 
 class ProfileUpdateView(UpdateView):
-    model = Profile
-    fields = '__all__'
+    model = Perfil
+    form_class = ProfileForm
     template_name = 'core/profile_update.html'
     context_object_name = 'profile'
 
     def get_object(self, queryset=None):
         return self.request.user.perfil
+
+    def get_success_url(self, queryset=None):
+        return reverse_lazy('core:profile')
