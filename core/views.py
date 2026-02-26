@@ -11,6 +11,47 @@ from .forms import *
 # Create your views here.
 
 class HomeView(ListView):
+    """
+    Display a paginated list of publications with optional search filtering.
+
+    Parameters
+    ----------
+    model : Publicacion
+        The model used to retrieve the list of posts.
+    context_object_name : str
+        Name of the variable passed to the template containing the posts.
+    paginate_by : int
+        Number of posts per page.
+    ordering : tuple
+        Default ordering for the queryset.
+
+    Notes
+    -----
+    The search query (``q``) supports filtering by:
+
+    - ``BUSCO`` or ``OFREZCO`` to filter by post type.
+    - Any other term to filter by skill name or description.
+
+    If a query is present, renders ``core/post_list.html``, otherwise ``core/home.html``.
+
+    Examples
+    --------
+    URL config::
+
+        path('', HomeView.as_view(), name='home')
+
+    Template usage::
+
+        {% for post in posts %}
+            {{ post.habilidad.nombre }}
+        {% endfor %}
+
+    Search examples::
+
+        /?q=ajedrez         → posts with skill "Ajedrez"
+        /?q=busco ajedrez   → posts of type BUSCO with skill "Ajedrez"
+        /?q=ofrezco python  → posts of type OFREZCO with skill "Python"
+    """
     context_object_name = 'posts'
     model = Publicacion
     paginate_by = 10
