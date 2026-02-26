@@ -3,13 +3,13 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import login
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from .forms import *
 
 
 # Create your views here.
 
-class Postview(ListView):
+class Postlistview(ListView):
     """
     Display a paginated list of all publications.
 
@@ -35,8 +35,17 @@ class Postview(ListView):
         {% endfor %}
     """
     model = Publicacion
-    template_name = 'core/publicacion_list.html'
+    template_name = 'core/post_list.html'
     context_object_name = 'posts'
+
+class PostDetailview(DetailView):
+    model = Publicacion
+    template_name = 'core/post_detail.html'
+    context_object_name = 'post'
+
+
+
+
 
 
 
