@@ -63,17 +63,17 @@
                     </li>
 
                     <!-- Botón cambiar idioma -->
-                    <li class="nav-item d-flex align-items-center">
+                    <li class="nav-item d-flex align-items-center ms-2">
                         <form method="post" action="{% url 'core:change_preference'%}" style="display: inline;">
                             {% csrf_token %}
                             {% if lang == 'es' %}
                                 <input type="hidden" name="lang" value="en">
-                                <button type="submit" class="btn btn-dark btn-sm" title="Switch to English">
+                                <button type="submit" class="btn btn-outline-light btn-sm" title="Switch to English">
                                     EN
                                 </button>
                             {% else %}
                                 <input type="hidden" name="lang" value="es">
-                                <button type="submit" class="btn btn-dark btn-sm" title="Cambiar a Español">
+                                <button type="submit" class="btn btn-outline-light btn-sm" title="Cambiar a Español">
                                     ES
                                 </button>
                             {% endif %}
