@@ -15,5 +15,6 @@ urlpatterns = [
     path('posts/<int:pk>', PostDetailview.as_view(), name='detail'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/edit/', ProfileUpdateView.as_view(), name='profile-update'),
+    path('statistics/', StatisticsView.as_view(), name='statistics'),
 
 ]

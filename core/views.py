@@ -1,10 +1,11 @@
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
+from django.contrib.sessions.models import Session
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView
 from .forms import *
 from django.views.decorators.http import require_http_methods
 
@@ -294,3 +295,32 @@ def change_preference(request):
         response.set_cookie('lang', lang, max_age=365*24*60*60)
 
     return response
+
+
+
+class StatisticsView(TemplateView):
+    template_name = 'core/statistics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StatisticsView, self).get_context_data(**kwargs)
+        context['total_posts'] = Publicacion.objects.count()
+        context['ongoing_agreements'] = Acuerdo.objects.filter(estado='EN CURSO').count()
+        context['total_agreements'] = Acuerdo.objects.count()
+        context['finished_agreements'] = Acuerdo.objects.filter(estado__exact='FINALIZADO').count()
+        context['proposed_agreements'] = Acuerdo.objects.filter(estado__exact='PROPUESTO').count()
+        context['canceled_agreements'] = Acuerdo.objects.filter(estado__exact='CANCELADO').count()
+        context['accepted_agreements'] = Acuerdo.objects.filter(estado__exact='ACEPTADO').count()
+        context['skills'] = Habilidad.objects.filter(publicacion__tipo='OFREZCO').distinct().count()
+        context['registered_users'] = Usuario.objects.filter(groups__exact='1').count()
+        context['total_sessions'] = Sesion.objects.count()
+        context['active_sessions'] = Sesion.objects.filter(estado=True).count()
+        context['finished_sessions'] = Sesion.objects.filter(estado=False).count()
+        context['moderators'] = Usuario.objects.filter(groups__name__exact='Moderador')
+        context['recent_posts'] = Publicacion.objects.order_by('-fecha_creacion')[:10]
+        context['recent_ofrezco'] = Publicacion.objects.filter(tipo='OFREZCO').order_by('-fecha_creacion')[:10]
+        context['recent_busco'] = Publicacion.objects.filter(tipo='BUSCO').order_by('-fecha_creacion')[:10]
+        context['posts_ofrezco'] = Publicacion.objects.filter(tipo='OFREZCO').count()
+        context['posts_busco'] = Publicacion.objects.filter(tipo='BUSCO').count()
+        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10] # There isn't any date field, had to use -id.
+
+        return context
