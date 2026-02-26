@@ -15,10 +15,10 @@ services:
       - .env
     environment:
       - DB_HOST=db
-    depends_on:
-      - db
     ports:
       - "8000:8000"
+    depends_on:
+      - db
     restart: unless-stopped
     networks:
       - net

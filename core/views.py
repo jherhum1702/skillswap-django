@@ -1,11 +1,11 @@
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from .forms import *
-
+from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 
@@ -167,3 +167,40 @@ class CustomRegisterView(CreateView):
         user.groups.add(user_group)
         login(self.request, user)
         return super().form_valid(form)
+
+
+
+@require_http_methods(["POST"])
+def change_preference(request):
+    """
+    Change user preferences for theme and language based on POST
+    data and store them in cookies.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        The request object contining POST data
+        - theme: 'light' or 'dark' (default: 'light')
+        - lang: 'es' or 'en' (default: 'es')
+
+    Returns
+    -------
+    POST /cambiar-preferencia/ with data:
+        {
+            'theme': 'dark',
+            'lang': 'en'
+        }
+    """
+    theme = request.POST.get('theme')
+    lang = request.POST.get('lang')
+
+    redirect_url = request.META.get('HTTP_REFERER', reverse_lazy('core:home'))
+
+    response = redirect(redirect_url)
+
+    if theme:
+        response.set_cookie('theme', theme, max_age=365*24*60*60)
+    if lang:
+        response.set_cookie('lang', lang, max_age=365*24*60*60)
+
+    return response
