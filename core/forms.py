@@ -350,6 +350,7 @@ class DealsPost(forms.ModelForm):
       if publicacion.tipo == 'OFREZCO':
         self.fields['habilidad_tradea_a'].queryset = Habilidad.objects.filter(pk=publicacion.habilidad.pk)
         self.fields['habilidad_tradea_a'].initial = publicacion.habilidad
+        self.fields['habilidad_tradea_a'].widget.attrs['class'] = 'form-select'  # ← añade esto
         self.fields['habilidad_tradea_a'].widget.attrs['style'] = 'pointer-events: none;'
         self.instance.habilidad_tradea_a = publicacion.habilidad
         self.fields['habilidad_tradea_b'].queryset = usuario_b.perfil.habilidades.all()
