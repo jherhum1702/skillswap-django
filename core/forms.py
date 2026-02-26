@@ -302,8 +302,8 @@ class ProfileForm(forms.ModelForm):
     def init(self, args, **kwargs):
         super().init(args, **kwargs)
         if self.instance.pk:
-            habilidades_actuales = self.instance.habilidades.values_list('nombre', flat=True)  # â† .values_list() no ()
-            self.fields['habilidades_nuevas'].initial = ', '.join(habilidades_actuales)  # â† sin .nombre
+            habilidades_actuales = self.instance.habilidades.values_list('nombre', flat=True)
+            self.fields['habilidades_nuevas'].initial = ', '.join(habilidades_actuales)
 
     habilidades_nuevas = forms.CharField(
         required=False,
