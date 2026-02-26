@@ -4,9 +4,11 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
-from .forms import *
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.views.decorators.http import require_http_methods
+from .forms import *
+from .models import *
+
 
 # Create your views here.
 
@@ -236,11 +238,33 @@ class CustomRegisterView(CreateView):
         302
         """
         user = form.save()
+        Perfil.objects.create(usuario=user)
         user_group, created = Group.objects.get_or_create(name='Usuario')
         user.groups.add(user_group)
         login(self.request, user)
         return super().form_valid(form)
 
+
+
+class ProfileView(DetailView):
+    model = Perfil
+    template_name = 'core/profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user.perfil
+
+class ProfileUpdateView(UpdateView):
+    model = Perfil
+    form_class = ProfileForm
+    template_name = 'core/profile_update.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        return self.request.user.perfil
+
+    def get_success_url(self, queryset=None):
+        return reverse_lazy('core:profile')
 
 
 @require_http_methods(["POST"])

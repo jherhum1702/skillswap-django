@@ -297,3 +297,45 @@ class CustomloginForm(AuthenticationForm):
 
         self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
+
+
+
+
+
+class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            habilidades_actuales = self.instance.habilidades.values_list('nombre', flat=True)  # ← .values_list() no ()
+            self.fields['habilidades_nuevas'].initial = ', '.join(habilidades_actuales)  # ← sin .nombre
+
+    habilidades_nuevas = forms.CharField(
+        required=False,
+        label="Habilidades",
+        help_text="Escribe habilidades separadas por comas"
+    )
+
+    class Meta:
+        model = Perfil
+        fields = ['biografia', 'zona_horaria', 'disponibilidad' ]
+        widgets = {
+            'biografia': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'zona_horaria': forms.Select(attrs={'class': 'form-select'}),
+            'disponibilidad': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+    def save(self, commit=True):
+        profile = super().save(commit=commit)
+        nuevas = self.cleaned_data['habilidades_nuevas']
+        if nuevas:
+            habilidades = []
+            for n in nuevas.split(','):
+                nombre = n.strip().lower().capitalize()  # "python" y "Python" → "Python"
+                if nombre:
+                    habilidad, _ = Habilidad.objects.get_or_create(
+                        nombre__iexact=nombre,  # busca sin importar mayúsculas
+                        defaults={'nombre': nombre}  # si no existe, la crea con capitalize
+                    )
+                    habilidades.append(habilidad)
+            profile.habilidades.set(habilidades)
+        return profile
