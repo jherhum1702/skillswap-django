@@ -266,6 +266,7 @@ class CustomRegisterView(CreateView):
         302
         """
         user = form.save()
+        Perfil.objects.create(usuario=user)
         user_group, created = Group.objects.get_or_create(name='Usuario')
         user.groups.add(user_group)
         login(self.request, user)
