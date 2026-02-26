@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Resultados{% endblock %}
+
+{% block content %}
+
+{% if posts %}
+<div class="row justify-content-center mb-4">
+  <div class="col-12 col-md-8 col-lg-6">
+    <form method="get" action="{% url 'core:home' %}">
+      <div class="input-group shadow-sm">
+        <input
+          type="search"
+          name="q"
+          class="form-control form-control-lg"
+          placeholder="Buscar habilidades..."
+          value="{{ request.GET.q }}"
+        >
+        <button class="btn btn-primary px-4" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<a href="{% url 'core:home' %}" class="btn btn-outline-secondary mb-3">
+  <i class="fas fa-arrow-left me-1"></i>Volver
+</a>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+  {% for post in posts %}
+  <div class="col">
+    <a href="{% url 'core:detail' post.id %}" class="text-decoration-none">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column gap-2">
+          <span class="badge bg-primary fs-6 text-wrap">{{ post.habilidad.nombre }}</span>
+
+          {% if post.tipo == "BUSCO" %}
+            <span class="badge bg-warning text-dark text-uppercase">
+              <i class="fas fa-search me-1"></i>Busco
+            </span>
+          {% else %}
+            <span class="badge bg-success text-uppercase">
+              <i class="fas fa-hand-holding me-1"></i>Ofrezco
+            </span>
+          {% endif %}
+
+          <div class="mt-auto">
+            <p class="mb-0 fw-semibold small text-reset">{{ post.autor }}</p>
+            <p class="mb-0 text-muted" style="font-size: 0.75rem;">{{ post.fecha_creacion|date:"d M Y" }}</p>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+  <div class="text-center py-5">
+    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+    <h5 class="text-muted">No se encontraron publicaciones para "{{ request.GET.q }}"</h5>
+    <p class="text-muted small">Prueba buscando otra skill</p>
+    <div class="mb-4">
+      <a href="{% url 'core:home' %}" class="btn btn-outline-primary mt-2">
+        <i class="fas fa-arrow-left me-1"></i>Volver al inicio
+      </a>
+    </div>
+    <div class="mt-2">
+      <img src="{% static 'imgs/sadcat.gif' %}" class="img-fluid" alt="Sad cat">
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -13,5 +13,7 @@ urlpatterns = [
     path('change-preference/', change_preference, name='change_preference'),
     path('posts/', Postlistview.as_view(), name='post'),
     path('posts/<int:pk>', PostDetailview.as_view(), name='detail'),
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/', ProfileUpdateView.as_view(), name='profile-update'),
 
 ]
