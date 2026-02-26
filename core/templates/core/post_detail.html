@@ -32,6 +32,10 @@
       <p class="small">{{ post.autor.perfil.disponibilidad }}</p>
     {% endif %}
 
+    <hr>
+    <a href="{% url 'core:deals-create' %}?autor={{ post.autor.pk }}&post={{ post.pk }}" class="btn btn-primary">
+      <i class="fas fa-handshake me-1"></i>Proponer acuerdo
+    </a>
   </div>
 </div>
 {% endblock %}
