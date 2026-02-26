@@ -31,11 +31,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:post' %}">Inicio</a>
+                        <a class="nav-link" href="{% url 'core:home' %}">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:post' %}">Posts</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" s>Acuerdos</a>
+                            <a class="nav-link">Acuerdos</a>
                         </li>
                     {% endif %}
                 </ul>
