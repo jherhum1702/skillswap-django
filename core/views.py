@@ -1,15 +1,94 @@
-
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView
 from .forms import *
-from .models import *
+from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 
-class Postview(ListView):
+class HomeView(ListView):
+    """
+    Display a paginated list of publications with optional search filtering.
+
+    Parameters
+    ----------
+    model : Publicacion
+        The model used to retrieve the list of posts.
+    context_object_name : str
+        Name of the variable passed to the template containing the posts.
+    paginate_by : int
+        Number of posts per page.
+    ordering : tuple
+        Default ordering for the queryset.
+
+    Notes
+    -----
+    The search query (``q``) supports filtering by:
+
+    - ``BUSCO`` or ``OFREZCO`` to filter by post type.
+    - Any other term to filter by skill name or description.
+
+    If a query is present, renders ``core/post_list.html``, otherwise ``core/home.html``.
+
+    Examples
+    --------
+    URL config::
+
+        path('', HomeView.as_view(), name='home')
+
+    Template usage::
+
+        {% for post in posts %}
+            {{ post.habilidad.nombre }}
+        {% endfor %}
+
+    Search examples::
+
+        /?q=ajedrez         → posts with skill "Ajedrez"
+        /?q=busco ajedrez   → posts of type BUSCO with skill "Ajedrez"
+        /?q=ofrezco python  → posts of type OFREZCO with skill "Python"
+    """
+    context_object_name = 'posts'
+    model = Publicacion
+    paginate_by = 10
+    ordering = ('-fecha_modificacion',)
+
+    def get_template_names(self):
+        if self.request.GET.get('q'):
+            return ['core/post_list.html']
+        return ['core/home.html']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q', '').strip()
+
+        if q:
+            tipo_filter = None
+            search_terms = []
+
+            for word in q.split():
+                word_upper = word.upper()
+                if word_upper in ['BUSCO', 'OFREZCO']:
+                    tipo_filter = word_upper
+                else:
+                    search_terms.append(word)
+
+            if tipo_filter:
+                queryset = queryset.filter(tipo=tipo_filter)
+
+            for term in search_terms:
+                queryset = queryset.filter(
+                    Q(habilidad__nombre__icontains=term) |
+                    Q(descripcion__icontains=term)
+                )
+
+        return queryset.distinct().select_related('autor', 'autor__perfil', 'habilidad').prefetch_related('autor__perfil__habilidades')
+
+class Postlistview(ListView):
     """
     Display a paginated list of all publications.
 
@@ -35,10 +114,14 @@ class Postview(ListView):
         {% endfor %}
     """
     model = Publicacion
-    template_name = 'core/publicacion_list.html'
+    template_name = 'core/post_list.html'
     context_object_name = 'posts'
 
 
+class PostDetailview(DetailView):
+    model = Publicacion
+    template_name = 'core/post_detail.html'
+    context_object_name = 'post'
 
 
 class CustomLogin(LoginView):
@@ -90,7 +173,6 @@ class CustomLogin(LoginView):
         '/home/'
         """
         return reverse_lazy('core:home')
-
 
 
 class CustomRegisterView(CreateView):
@@ -154,13 +236,10 @@ class CustomRegisterView(CreateView):
         302
         """
         user = form.save()
-        Perfil.objects.create(usuario=user)
         user_group, created = Group.objects.get_or_create(name='Usuario')
         user.groups.add(user_group)
         login(self.request, user)
         return super().form_valid(form)
-
-
 
 class ProfileView(DetailView):
     model = Perfil
@@ -181,3 +260,38 @@ class ProfileUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('core:profile')
+
+@require_http_methods(["POST"])
+def change_preference(request):
+    """
+    Change user preferences for theme and language based on POST
+    data and store them in cookies.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        The request object contining POST data
+        - theme: 'light' or 'dark' (default: 'light')
+        - lang: 'es' or 'en' (default: 'es')
+
+    Returns
+    -------
+    POST /cambiar-preferencia/ with data:
+        {
+            'theme': 'dark',
+            'lang': 'en'
+        }
+    """
+    theme = request.POST.get('theme')
+    lang = request.POST.get('lang')
+
+    redirect_url = request.META.get('HTTP_REFERER', reverse_lazy('core:home'))
+
+    response = redirect(redirect_url)
+
+    if theme:
+        response.set_cookie('theme', theme, max_age=365*24*60*60)
+    if lang:
+        response.set_cookie('lang', lang, max_age=365*24*60*60)
+
+    return response
