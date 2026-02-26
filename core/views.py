@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView
 from .forms import *
 from django.views.decorators.http import require_http_methods
+from .session_manager import SessionManager
 
 # Create your views here.
 
@@ -59,13 +60,31 @@ class HomeView(ListView):
     ordering = ('-fecha_modificacion',)
 
     def get_template_names(self):
-        if self.request.GET.get('q'):
+        q = self.request.GET.get('q', '').strip()
+        if not q:
+            # Check if there are saved filters in session
+            filters = SessionManager.get_filters(self.request)
+            q = filters.get('q', '')
+
+        if q:
             return ['core/search_results.html']
         return ['core/home.html']
 
     def get_queryset(self):
         queryset = super().get_queryset()
         q = self.request.GET.get('q', '').strip()
+
+        # If no search in URL, try to restore from session
+        if not q:
+            filters = SessionManager.get_filters(self.request)
+            q = filters.get('q', '')
+        else:
+            # If new search, save to session
+            SessionManager.save_filters(self.request, q=q)
+
+        # If no query at all, clear filters
+        if not q:
+            SessionManager.clear_filters(self.request)
 
         if q:
             tipo_filter = None
@@ -88,6 +107,18 @@ class HomeView(ListView):
                 )
 
         return queryset.distinct().select_related('autor', 'autor__perfil', 'habilidad').prefetch_related('autor__perfil__habilidades')
+
+    def get_context_data(self, **kwargs):
+        """
+        Add saved filters to the template context.
+
+        Returns the context with filters recovered from session so the template can display the active search filters.
+        """
+
+        context = super().get_context_data(**kwargs)
+        filters = SessionManager.get_filters(self.request)
+        context['filters'] = filters
+        return context
 
 class Postlistview(ListView):
     """
@@ -236,6 +267,7 @@ class CustomRegisterView(CreateView):
         302
         """
         user = form.save()
+        Perfil.objects.create(usuario=user)
         user_group, created = Group.objects.get_or_create(name='Usuario')
         user.groups.add(user_group)
         login(self.request, user)
@@ -260,6 +292,31 @@ class ProfileUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('core:profile')
+
+def clear_filters(request):
+    """
+    Clear all search filters from the session.
+
+    Removes the saved search filters and redirects back to home.
+
+    Parameters
+    ----------
+    request : HttpRequest
+        The HTTP request object containing the session.
+
+    Returns
+    -------
+    HttpResponseRedirect
+        Redirects to the home page with filters cleared.
+
+    Examples
+    --------
+    URL config::
+
+        path('clear-filters/', clear_filters, name='clear_filters'),
+    """
+    SessionManager.clear_filters(request)
+    return redirect(reverse_lazy('core:home'))
 
 @require_http_methods(["POST"])
 def change_preference(request):
