@@ -248,7 +248,7 @@ class CustomloginForm(AuthenticationForm):
 
 
     username = forms.CharField(label="Username/Email")
-    password = forms.CharField(label="ContraseÃ±a", widget=forms.PasswordInput, required=True)
+    password = forms.CharField(label="Password", widget=forms.PasswordInput, required=True)
 
     def clean(self):
         """
