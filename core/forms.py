@@ -328,8 +328,14 @@ class ProfileForm(forms.ModelForm):
         profile = super().save(commit=commit)
         nuevas = self.cleaned_data['habilidades_nuevas']
         if nuevas:
-            profile.habilidades.set(
-                [Habilidad.objects.get_or_create(nombre=n.strip())[0]
-                 for n in nuevas.split(',') if n.strip()]
-            )
+            habilidades = []
+            for n in nuevas.split(','):
+                nombre = n.strip().lower().capitalize()  # "python" y "Python" → "Python"
+                if nombre:
+                    habilidad, _ = Habilidad.objects.get_or_create(
+                        nombre__iexact=nombre,  # busca sin importar mayúsculas
+                        defaults={'nombre': nombre}  # si no existe, la crea con capitalize
+                    )
+                    habilidades.append(habilidad)
+            profile.habilidades.set(habilidades)
         return profile
