@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView
 from .forms import *
 from django.views.decorators.http import require_http_methods
 
@@ -241,25 +241,7 @@ class CustomRegisterView(CreateView):
         login(self.request, user)
         return super().form_valid(form)
 
-class ProfileView(DetailView):
-    model = Perfil
-    template_name = 'core/profile.html'
-    context_object_name = 'profile'
 
-    def get_object(self, queryset=None):
-        return self.request.user.perfil
-
-class ProfileUpdateView(UpdateView):
-    model = Perfil
-    form_class = ProfileForm
-    template_name = 'core/profile_update.html'
-    context_object_name = 'profile'
-
-    def get_object(self, queryset=None):
-        return self.request.user.perfil
-
-    def get_success_url(self):
-        return reverse_lazy('core:profile')
 
 @require_http_methods(["POST"])
 def change_preference(request):

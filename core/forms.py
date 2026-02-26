@@ -3,7 +3,7 @@ import email
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth import authenticate
-from .models import *
+from .models import * #
 from disposable_email_domains import blocklist
 
 
@@ -248,7 +248,7 @@ class CustomloginForm(AuthenticationForm):
 
 
     username = forms.CharField(label="Username/Email")
-    password = forms.CharField(label="ContraseÃ±a", widget=forms.PasswordInput, required=True)
+    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput, required=True)
 
     def clean(self):
         """
@@ -297,41 +297,3 @@ class CustomloginForm(AuthenticationForm):
 
         self.confirm_login_allowed(self.user_cache)
         return self.cleaned_data
-
-class ProfileForm(forms.ModelForm):
-    def init(self, args, **kwargs):
-        super().init(args, **kwargs)
-        if self.instance.pk:
-            habilidades_actuales = self.instance.habilidades.values_list('nombre', flat=True)  # â† .values_list() no ()
-            self.fields['habilidades_nuevas'].initial = ', '.join(habilidades_actuales)  # â† sin .nombre
-
-    habilidades_nuevas = forms.CharField(
-        required=False,
-        label="Habilidades",
-        help_text="Escribe habilidades separadas por comas"
-    )
-
-    class Meta:
-        model = Perfil
-        fields = ['biografia', 'zona_horaria', 'disponibilidad' ]
-        widgets = {
-            'biografia': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'zona_horaria': forms.Select(attrs={'class': 'form-select'}),
-            'disponibilidad': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        }
-
-    def save(self, commit=True):
-        profile = super().save(commit=commit)
-        nuevas = self.cleaned_data['habilidadesnuevas']
-        if nuevas:
-            habilidades = []
-            for n in nuevas.split(','):
-                nombre = n.strip().lower().capitalize()  # "python" y "Python" â†’ "Python"
-                if nombre:
-                    habilidad,  = Habilidad.objects.get_or_create(
-                        nombre__iexact=nombre,
-                        defaults={'nombre': nombre}
-                    )
-                    habilidades.append(habilidad)
-            profile.habilidades.set(habilidades)
-        return profile
