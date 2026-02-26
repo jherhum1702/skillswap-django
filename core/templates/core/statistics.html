@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Encabezado -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-chart-bar me-2"></i>Panel de Estadísticas</h2>
+    <span class="text-muted">Bienvenido, {{ user.username|title }}</span>
+</div>
+
+<!-- Tarjetas de resumen -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm text-white bg-primary">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 small">Posts Publicados</p>
+                    <h3 class="mb-0 fw-bold">{{ total_posts }}</h3>
+                </div>
+                <i class="fas fa-file-alt fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm text-white bg-success">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 small">Acuerdos Activos</p>
+                    <h3 class="mb-0 fw-bold">{{ ongoing_agreements }}</h3>
+                </div>
+                <i class="fas fa-handshake fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm text-white bg-warning">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 small">Habilidades Ofrecidas</p>
+                    <h3 class="mb-0 fw-bold">{{ skills }}</h3>
+                </div>
+                <i class="fas fa-tools fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm text-white bg-danger">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-1 small">Usuarios Registrados</p>
+                    <h3 class="mb-0 fw-bold">{{ registered_users }}</h3>
+                </div>
+                <i class="fas fa-users fa-2x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fila: Estado de acuerdos + Sesiones -->
+<div class="row g-4 mb-4">
+
+    <!-- Acuerdos por estado -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent fw-semibold">
+                <i class="fas fa-handshake me-2 text-primary"></i>Acuerdos
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">Total</span>
+                        <span class="badge bg-dark rounded-pill">{{ total_agreements }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Propuestos</span>
+                        <span class="badge bg-secondary rounded-pill">{{ proposed_agreements }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Aceptados</span>
+                        <span class="badge bg-info text-dark rounded-pill">{{ accepted_agreements }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>En Curso</span>
+                        <span class="badge bg-success rounded-pill">{{ ongoing_agreements }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Finalizados</span>
+                        <span class="badge bg-primary rounded-pill">{{ finished_agreements }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Cancelados</span>
+                        <span class="badge bg-danger rounded-pill">{{ canceled_agreements }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sesiones -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent fw-semibold">
+                <i class="fas fa-calendar-check me-2 text-warning"></i>Sesiones
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">Total</span>
+                        <span class="badge bg-dark rounded-pill">{{ total_sessions }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Activas</span>
+                        <span class="badge bg-success rounded-pill">{{ active_sessions }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="text-muted ms-3"><i class="fas fa-circle-dot me-1 small"></i>Finalizadas</span>
+                        <span class="badge bg-primary rounded-pill">{{ finished_sessions }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Fila: tabla posts + actividad reciente -->
+<div class="row g-4 mb-4">
+
+    <!-- Tabla de posts recientes -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent fw-semibold d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-list me-2 text-primary"></i>Posts Recientes</span>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-success">Ofrezco: {{ recent_ofrezco | length }}</span>
+                    <span class="badge bg-primary">Busco: {{ recent_busco | length}}</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in recent_posts %}
+                            <tr>
+                                <td>{{ post.descripcion|truncatechars:40 }}</td>
+                                <td>{{ post.autor }}</td>
+                                <td>
+                                    {% if post.tipo == 'OFREZCO' %}
+                                        <span class="badge bg-success">Ofrezco</span>
+                                    {% else %}
+                                        <span class="badge bg-primary">Busco</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if post.estado %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No hay posts aún.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividad reciente -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-transparent fw-semibold">
+                <i class="fas fa-clock me-2 text-success"></i>Actividad Reciente
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for acuerdo in actividad_reciente %}
+                    <li class="list-group-item px-0">
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="badge bg-primary rounded-pill mt-1">{{ forloop.counter }}</span>
+                            <div>
+                                <p class="mb-0 small">
+                                    <span class="fw-semibold">{{ acuerdo.usuario_a }}</span>
+                                    ↔
+                                    <span class="fw-semibold">{{ acuerdo.usuario_b }}</span>
+                                </p>
+                                <small class="text-muted">
+                                    {% if acuerdo.estado == 'PROPUESTO' %}
+                                        <span class="badge bg-secondary">Propuesto</span>
+                                    {% elif acuerdo.estado == 'ACEPTADO' %}
+                                        <span class="badge bg-info text-dark">Aceptado</span>
+                                    {% elif acuerdo.estado == 'EN CURSO' %}
+                                        <span class="badge bg-success">En Curso</span>
+                                    {% elif acuerdo.estado == 'FINALIZADO' %}
+                                        <span class="badge bg-primary">Finalizado</span>
+                                    {% elif acuerdo.estado == 'CANCELADO' %}
+                                        <span class="badge bg-danger">Cancelado</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item px-0 text-muted text-center">Sin actividad reciente.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Moderadores -->
+<div class="row g-4 mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent fw-semibold">
+                <i class="fas fa-shield-alt me-2 text-danger"></i>Usuarios Moderadores
+                <span class="badge bg-danger ms-2">{{ moderators|length }}</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Estado</th>
+                                <th>Superusuario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mod in moderators %}
+                            <tr>
+                                <td><span class="fw-semibold">@{{ mod.username }}</span></td>
+                                <td>{{ mod.get_full_name }}</td>
+                                <td>{{ mod.email }}</td>
+                                <td>
+                                    {% if mod.is_active %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if mod.is_superuser %}
+                                        <span class="badge bg-danger">Sí</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark">No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">No hay moderadores registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
