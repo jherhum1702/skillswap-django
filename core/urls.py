@@ -4,9 +4,10 @@ from .views import *
 app_name = 'core'
 
 urlpatterns = [
-path('accounts/login/', CustomLogin.as_view(), name='login'),
-path('accounts/logout/', LogoutView.as_view(), name='logout'),
-path('accounts/register/', CustomRegisterView.as_view(), name='registro'),
-path('posts/', Postlistview.as_view(), name='post'),
-path('posts/<int:pk>', PostDetailview.as_view(), name='detail'),
+    path('', HomeView.as_view(), name='home'),
+    path('accounts/login/', CustomLogin.as_view(), name='login'),
+    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    path('accounts/register/', CustomRegisterView.as_view(), name='registro'),
+    path('posts/', Postlistview.as_view(), name='post'),
+    path('posts/<int:pk>', PostDetailview.as_view(), name='detail'),
 ]

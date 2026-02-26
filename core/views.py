@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
+from django.db.models import Q
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
@@ -8,6 +9,43 @@ from .forms import *
 
 
 # Create your views here.
+
+class HomeView(ListView):
+    context_object_name = 'posts'
+    model = Publicacion
+    paginate_by = 10
+    ordering = ('-fecha_modificacion',)
+
+    def get_template_names(self):
+        if self.request.GET.get('q'):
+            return ['core/post_list.html']
+        return ['core/home.html']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q', '').strip()
+
+        if q:
+            tipo_filter = None
+            search_terms = []
+
+            for word in q.split():
+                word_upper = word.upper()
+                if word_upper in ['BUSCO', 'OFREZCO']:
+                    tipo_filter = word_upper
+                else:
+                    search_terms.append(word)
+
+            if tipo_filter:
+                queryset = queryset.filter(tipo=tipo_filter)
+
+            for term in search_terms:
+                queryset = queryset.filter(
+                    Q(habilidad__nombre__icontains=term) |
+                    Q(descripcion__icontains=term)
+                )
+
+        return queryset.distinct().select_related('autor', 'autor__perfil', 'habilidad').prefetch_related('autor__perfil__habilidades')
 
 class Postlistview(ListView):
     """
@@ -38,16 +76,11 @@ class Postlistview(ListView):
     template_name = 'core/post_list.html'
     context_object_name = 'posts'
 
+
 class PostDetailview(DetailView):
     model = Publicacion
     template_name = 'core/post_detail.html'
     context_object_name = 'post'
-
-
-
-
-
-
 
 
 class CustomLogin(LoginView):
@@ -99,7 +132,6 @@ class CustomLogin(LoginView):
         '/home/'
         """
         return reverse_lazy('core:home')
-
 
 
 class CustomRegisterView(CreateView):

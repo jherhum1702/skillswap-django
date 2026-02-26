@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row justify-content-center mb-4">
+  <div class="col-12 col-md-8 col-lg-6">
+    <form method="get" action="{% url 'core:home' %}">
+      <div class="input-group shadow-sm">
+        <input
+          type="search"
+          name="q"
+          class="form-control form-control-lg"
+          placeholder="Buscar habilidades..."
+          value="{{ request.GET.q }}"
+        >
+        <button class="btn btn-primary px-4" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
