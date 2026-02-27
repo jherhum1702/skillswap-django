@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
-from django.db.models import Q, Count, Case, When, IntegerField
+from django.db.models import Q, Count, Case, When, IntegerField, F
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.db.models import Q
@@ -475,6 +475,11 @@ class DealsDetailView(DetailView):
     context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
+
+    def get_context_data(self, **kwargs):
+        context = super(DealsDetailView, self).get_context_data(**kwargs)
+        context['deal'] = Acuerdo.objects.annotate(total_mins=F('semanas') * F('sesiones_por_semana') * F('mins_sesion')).get(pk=self.kwargs['pk'])
+        return context
 
 class DealsListView(ListView):
     model = Acuerdo
