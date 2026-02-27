@@ -3,6 +3,8 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
+from django.db.models import Q, Count, Case, When, IntegerField, F
+from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
@@ -156,6 +158,9 @@ class PostDetailview(DetailView):
     model = Publicacion
     template_name = 'core/post_detail.html'
     context_object_name = 'post'
+
+    def get_object(self, queryset=None):
+        return Publicacion.objects.annotate(total_proposals=Count('autor__acuerdo_a',filter=Q(autor__acuerdo_a__estado='PROPUESTO'))).get(pk=self.kwargs['pk']) # Need to check if it's USUARIO_A or B
 
 
 class CustomLogin(LoginView):
@@ -381,11 +386,9 @@ class StatisticsView(TemplateView):
         context['recent_busco'] = Publicacion.objects.filter(tipo='BUSCO').order_by('-fecha_creacion')[:10]
         context['posts_ofrezco'] = Publicacion.objects.filter(tipo='OFREZCO').count()
         context['posts_busco'] = Publicacion.objects.filter(tipo='BUSCO').count()
-        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10]
+        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10] # There isn't any date field, had to use -id.
 
         return context
-
-
 
 
 class DealsCreateView(CreateView):
@@ -469,9 +472,13 @@ class DealsDeleteView(DeleteView):
 
 class DealsDetailView(DetailView):
     model = Acuerdo
-    context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
+
+    def get_context_data(self, **kwargs):
+        context = super(DealsDetailView, self).get_context_data(**kwargs)
+        context['deal'] = Acuerdo.objects.annotate(total_mins=F('semanas') * F('sesiones_por_semana') * F('mins_sesion')).get(pk=self.kwargs['pk'])
+        return context
 
 class DealsListView(ListView):
     model = Acuerdo
@@ -479,6 +486,11 @@ class DealsListView(ListView):
     template_name = 'core/dealslist.html'
 
     def get_queryset(self):
-        return Acuerdo.objects.filter(
-            models.Q(usuario_a=self.request.user) | models.Q(usuario_b=self.request.user)
-        )
+        return Acuerdo.objects.filter(models.Q(usuario_a=self.request.user) | models.Q(usuario_b=self.request.user)).annotate(
+            orden=Case(
+                When(estado='EN CURSO', then=0),
+                When(estado='ACEPTADO', then=1),
+                When(estado='PROPUESTO', then=2),
+                When(estado='CANCELADO', then=3),
+                When(estado='FINALIZADO', then=4),
+                default=5, output_field=IntegerField(),)).order_by('orden') # I do this because of annotate requirement, as I was going to do multiple queries and order them.
