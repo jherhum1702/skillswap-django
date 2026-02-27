@@ -317,47 +317,50 @@ class Command(BaseCommand):
         self.stdout.write('\nCreating agreements...')
 
         acuerdos_data = [
-            # (username_a, username_b, semanas, mins, sesiones_semana, estado, condiciones, habilidad_a, habilidad_b)
-            ('pacogamer30', 'laurasan',    4, 60, 2, 'EN CURSO',   'Ejercicios semanales y vocabulario específico.', 'Photoshop',         'Inglés'),
-            ('anadev',      'carlosdev',   3, 60, 2, 'EN CURSO',   'Revisión de proyectos reales en cada sesión.',   'React',             'Django'),
-            ('luism',       'pablomoreno', 5, 90, 1, 'EN CURSO',   'Prácticas con servidor propio en VPS.',          'Linux',             'JavaScript'),
-            ('mariadev',    'davidj',      6, 60, 2, 'EN CURSO',   'Kaggle competitions como práctica.',             'Machine Learning',  'SQL'),
-            ('sofiahm',     'elenatorres', 4, 60, 1, 'EN CURSO',   'Feedback mutuo en portfolio.',                   'Figma',             'Fotografía'),
-            ('jorgeperez',  'claudiam',    3, 90, 2, 'EN CURSO',   'Canciones en francés como práctica.',            'Producción Musical','Francés'),
-            ('fernandor',   'miguelf',     4, 60, 1, 'EN CURSO',   'Recetas temáticas por sesión.',                  'Guitarra',          'Cocina'),
-            ('carmend',     'isanav',      5, 60, 2, 'EN CURSO',   'Análisis de campañas reales semanales.',         'SEO',               'Copywriting'),
-            ('luciarom',    'alexalonso',  4, 60, 1, 'EN CURSO',   'Partidas comentadas tras cada sesión.',          'Piano',             'Ajedrez'),
-            ('nataliagil',  'robertoserr', 3, 60, 2, 'EN CURSO',   'Proyecto de dashboard como hilo conductor.',     'Redes Sociales',    'Python'),
+            # (username_a, username_b, semanas, mins, ses/semana, estado, condiciones, habilidad_a, habilidad_b, descripcion_publicacion)
+            ('pacogamer30', 'laurasan',    4, 60, 2, 'EN CURSO',   'Ejercicios semanales y vocabulario específico.',  'Photoshop',          'Inglés',            'Ofrezco clases de Photoshop para principiantes'),
+            ('anadev',      'carlosdev',   3, 60, 2, 'EN CURSO',   'Revisión de proyectos reales en cada sesión.',    'React',              'Django',            'Clases de React y hooks modernos'),
+            ('luism',       'pablomoreno', 5, 90, 1, 'EN CURSO',   'Prácticas con servidor propio en VPS.',           'Linux',              'JavaScript',        'Explico Linux y administración de sistemas'),
+            ('mariadev',    'davidj',      6, 60, 2, 'EN CURSO',   'Kaggle competitions como práctica.',              'Machine Learning',   'SQL',               'Machine Learning aplicado con scikit-learn'),
+            ('sofiahm',     'elenatorres', 4, 60, 1, 'EN CURSO',   'Feedback mutuo en portfolio.',                    'Figma',              'Fotografía',        'Diseño interfaces en Figma, portfolio incluido'),
+            ('jorgeperez',  'claudiam',    3, 90, 2, 'EN CURSO',   'Canciones en francés como práctica.',             'Producción Musical', 'Francés',           'Producción musical en Ableton Live'),
+            ('fernandor',   'miguelf',     4, 60, 1, 'EN CURSO',   'Recetas temáticas por sesión.',                   'Guitarra',           'Cocina',            'Clases de guitarra eléctrica y acústica'),
+            ('carmend',     'isanav',      5, 60, 2, 'EN CURSO',   'Análisis de campañas reales semanales.',          'SEO',                'Copywriting',       'SEO técnico y estrategia de contenidos'),
+            ('luciarom',    'alexalonso',  4, 60, 1, 'EN CURSO',   'Partidas comentadas tras cada sesión.',           'Piano',              'Ajedrez',           'Piano clásico para todos los niveles'),
+            ('nataliagil',  'robertoserr', 3, 60, 2, 'EN CURSO',   'Proyecto de dashboard como hilo conductor.',      'Redes Sociales',     'Python',            'Gestión de redes sociales y creación de contenido'),
 
-            ('pacogamer30', 'anadev',      4, 60, 1, 'ACEPTADO',   'Revisión de portfolio al finalizar.',            'Python',            'React'),
-            ('luism',       'mariadev',    3, 60, 2, 'ACEPTADO',   'Entorno de pruebas compartido en cloud.',        'Docker',            'Machine Learning'),
-            ('carlosdev',   'davidj',      5, 90, 1, 'ACEPTADO',   'Proyecto API + frontend como resultado.',        'Django',            'Figma'),
-            ('sofiahm',     'carmend',     4, 60, 2, 'ACEPTADO',   'Caso real de branding como práctica.',           'Diseño UX/UI',      'Marketing Digital'),
-            ('fernandor',   'jorgeperez',  6, 60, 2, 'ACEPTADO',   'Componer una canción juntos al final.',          'Guitarra',          'Producción Musical'),
-            ('elenatorres', 'nataliagil',  3, 60, 1, 'ACEPTADO',   'Shooting fotográfico para RRSS como meta.',      'Fotografía',        'Redes Sociales'),
-            ('claudiam',    'alexalonso',  4, 60, 1, 'ACEPTADO',   'Literatura francesa de apertura en ajedrez.',    'Francés',           'Ajedrez'),
-            ('robertoserr', 'isanav',      5, 60, 2, 'ACEPTADO',   'Newsletter conjunta como proyecto final.',       'Excel',             'Copywriting'),
+            ('pacogamer30', 'anadev',      4, 60, 1, 'ACEPTADO',   'Revisión de portfolio al finalizar.',             'Python',             'React',             'Enseño Python desde cero, con proyectos reales'),
+            ('luism',       'mariadev',    3, 60, 2, 'ACEPTADO',   'Entorno de pruebas compartido en cloud.',         'Docker',             'Machine Learning',  'Introduzco Docker y contenedores desde cero'),
+            ('carlosdev',   'davidj',      5, 90, 1, 'ACEPTADO',   'Proyecto API + frontend como resultado.',         'Django',             'Figma',             'Desarrollo de APIs REST con Django'),
+            ('sofiahm',     'carmend',     4, 60, 2, 'ACEPTADO',   'Caso real de branding como práctica.',            'Diseño UX/UI',       'Marketing Digital', 'Diseño UX/UI con metodología centrada en usuario'),
+            ('fernandor',   'jorgeperez',  6, 60, 2, 'ACEPTADO',   'Componer una canción juntos al final.',           'Guitarra',           'Producción Musical','Clases de guitarra eléctrica y acústica'),
+            ('elenatorres', 'nataliagil',  3, 60, 1, 'ACEPTADO',   'Shooting fotográfico para RRSS como meta.',       'Fotografía',         'Redes Sociales',    'Fotografía de retrato y paisaje urbano'),
+            ('claudiam',    'alexalonso',  4, 60, 1, 'ACEPTADO',   'Literatura francesa de apertura en ajedrez.',     'Francés',            'Ajedrez',           'Clases de francés conversacional'),
+            ('robertoserr', 'isanav',      5, 60, 2, 'ACEPTADO',   'Newsletter conjunta como proyecto final.',        'Excel',              'Copywriting',       'Excel avanzado: tablas dinámicas y macros'),
 
-            ('pablomoreno', 'luism',       3, 60, 1, 'PROPUESTO',  'Acordar horario a confirmar.',                   'React',             'Linux'),
-            ('davidj',      'sofiahm',     4, 60, 2, 'PROPUESTO',  'Pendiente confirmar disponibilidad.',            'Machine Learning',  'Figma'),
-            ('miguelf',     'claudiam',    3, 60, 1, 'PROPUESTO',  'Intercambio recetas+idioma, pendiente inicio.',  'Cocina',            'Francés'),
-            ('luciarom',    'fernandor',   4, 90, 1, 'PROPUESTO',  'Sesiones combinadas música clásica/moderna.',    'Piano',             'Guitarra'),
-            ('carmend',     'nataliagil',  5, 60, 2, 'PROPUESTO',  'Estrategia de contenido como proyecto.',         'SEO',               'Redes Sociales'),
-            ('isanav',      'elenatorres', 3, 60, 1, 'PROPUESTO',  'Portafolio fotográfico con copy incluido.',      'Copywriting',       'Fotografía'),
+            ('pablomoreno', 'luism',       3, 60, 1, 'PROPUESTO',  'Acordar horario a confirmar.',                    'React',              'Linux',             'Quiero aprender React para proyectos freelance'),
+            ('davidj',      'sofiahm',     4, 60, 2, 'PROPUESTO',  'Pendiente confirmar disponibilidad.',             'Machine Learning',   'Figma',             'Busco aprender Figma para mis proyectos'),
+            ('miguelf',     'claudiam',    3, 60, 1, 'PROPUESTO',  'Intercambio recetas+idioma, pendiente inicio.',   'Cocina',             'Francés',           'Recetas de cocina mediterránea paso a paso'),
+            ('luciarom',    'fernandor',   4, 90, 1, 'PROPUESTO',  'Sesiones combinadas música clásica/moderna.',     'Piano',              'Guitarra',          'Piano clásico para todos los niveles'),
+            ('carmend',     'nataliagil',  5, 60, 2, 'PROPUESTO',  'Estrategia de contenido como proyecto.',          'SEO',                'Redes Sociales',    'SEO técnico y estrategia de contenidos'),
+            ('isanav',      'elenatorres', 3, 60, 1, 'PROPUESTO',  'Portafolio fotográfico con copy incluido.',       'Copywriting',        'Fotografía',        'Copywriting persuasivo para landing pages'),
 
-            ('pacogamer30', 'carlosdev',   4, 60, 2, 'FINALIZADO', 'Completado con éxito. Buen intercambio.',        'Photoshop',         'Docker'),
-            ('anadev',      'mariadev',    3, 60, 1, 'FINALIZADO', 'Objetivo alcanzado en todas las sesiones.',      'Figma',             'SQL'),
-            ('luism',       'davidj',      5, 60, 2, 'FINALIZADO', 'Proyecto desplegado en producción.',             'Linux',             'Machine Learning'),
-            ('jorgeperez',  'fernandor',   4, 90, 1, 'FINALIZADO', 'Canción compuesta y grabada juntos.',            'Producción Musical','Guitarra'),
-            ('robertoserr', 'carmend',     3, 60, 2, 'FINALIZADO', 'Dashboard de métricas de marketing entregado.',  'Python',            'Marketing Digital'),
+            ('pacogamer30', 'carlosdev',   4, 60, 2, 'FINALIZADO', 'Completado con éxito. Buen intercambio.',         'Photoshop',          'Docker',            'Ofrezco clases de Photoshop para principiantes'),
+            ('anadev',      'mariadev',    3, 60, 1, 'FINALIZADO', 'Objetivo alcanzado en todas las sesiones.',       'Figma',              'SQL',               'Diseño interfaces en Figma, portfolio incluido'),
+            ('luism',       'davidj',      5, 60, 2, 'FINALIZADO', 'Proyecto desplegado en producción.',              'Linux',              'Machine Learning',  'Explico Linux y administración de sistemas'),
+            ('jorgeperez',  'fernandor',   4, 90, 1, 'FINALIZADO', 'Canción compuesta y grabada juntos.',             'Producción Musical', 'Guitarra',          'Producción musical en Ableton Live'),
+            ('robertoserr', 'carmend',     3, 60, 2, 'FINALIZADO', 'Dashboard de métricas de marketing entregado.',   'Python',             'Marketing Digital', 'Análisis de datos con Python y Pandas'),
 
-            ('sofiahm',     'luism',       3, 60, 2, 'CANCELADO',  'Cancelado por incompatibilidad de horarios.',    'Illustrator',       'Docker'),
-            ('miguelf',     'alexalonso',  4, 60, 1, 'CANCELADO',  'Cancelado por cambio de prioridades.',           'Cocina',            'Estrategia'),
+            ('sofiahm',     'luism',       3, 60, 2, 'CANCELADO',  'Cancelado por incompatibilidad de horarios.',     'Illustrator',        'Docker',            'Quiero aprender React para proyectos freelance'),
+            ('miguelf',     'alexalonso',  4, 60, 1, 'CANCELADO',  'Cancelado por cambio de prioridades.',            'Cocina',             'Estrategia',        'Recetas de cocina mediterránea paso a paso'),
         ]
 
         acuerdos = []
-        for (username_a, username_b, semanas, mins, sesiones_semana, estado, condiciones, habilidad_a, habilidad_b) in acuerdos_data:
+        for (username_a, username_b, semanas, mins, sesiones_semana, estado, condiciones, habilidad_a, habilidad_b, descripcion_pub) in acuerdos_data:
             try:
+                # Resolve the publicacion that originated this agreement
+                publicacion = Publicacion.objects.filter(descripcion=descripcion_pub).first()
+
                 acuerdo, created = Acuerdo.objects.get_or_create(
                     usuario_a=Usuario.objects.get(username=username_a),
                     usuario_b=Usuario.objects.get(username=username_b),
@@ -369,6 +372,7 @@ class Command(BaseCommand):
                         'sesiones_por_semana': sesiones_semana,
                         'estado':              estado,
                         'condiciones':         condiciones,
+                        'publicacion':         publicacion,
                     }
                 )
                 if created:
