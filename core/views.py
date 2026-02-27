@@ -472,6 +472,7 @@ class DealsDeleteView(DeleteView):
 
 class DealsDetailView(DetailView):
     model = Acuerdo
+    context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
 
@@ -496,3 +497,26 @@ class DealsListView(ListView):
                 When(estado='CANCELADO', then=3),
                 When(estado='FINALIZADO', then=4),
                 default=5, output_field=IntegerField(),)).order_by('orden') # I do this because of annotate requirement, as I was going to do multiple queries and order them.
+
+
+class PostCreateview(CreateView):
+    model = Publicacion
+    form_class = PostCreate
+    success_url = reverse_lazy('core:post')
+    template_name = 'core/postCreate.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mis_habilidades'] = list(
+            self.request.user.perfil.habilidades.values_list('id', flat=True)
+        )
+        return context
