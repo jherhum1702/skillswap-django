@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Acuerdos{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Acuerdos" %}{% endblock %}
 
 {% block content %}
 
@@ -43,7 +44,7 @@
           <!-- Duración -->
           <div class="mt-auto">
             <small class="text-muted">
-              <i class="fas fa-calendar me-1"></i>{{ deal.semanas }} semana{{ deal.semanas|pluralize }}
+              <i class="fas fa-calendar me-1"></i>{{ deal.semanas }} {% blocktrans count counter=deal.semanas %}semana{% plural %}semanas{% endblocktrans %}
             </small>
           </div>
 

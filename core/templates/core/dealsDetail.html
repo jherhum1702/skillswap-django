@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Detalle Acuerdo{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Detalle Acuerdo" %}{% endblock %}
 
 {% block content %}
 <a href="{% url 'core:deals' %}" class="btn btn-outline-secondary mb-3">
@@ -30,8 +31,8 @@
 
     <!-- Habilidades -->
     <div class="d-flex gap-2 mb-3">
-      <span class="badge bg-success fs-6"><i class="fas fa-arrow-down me-1"></i>Das: {{ deal.habilidad_tradea_a }}</span>
-      <span class="badge bg-primary fs-6"><i class="fas fa-arrow-up me-1"></i>Recibes: {{ deal.habilidad_tradea_b }}</span>
+      <span class="badge bg-success fs-6"><i class="fas fa-arrow-down me-1"></i>{% trans "Das:" %} {{ deal.habilidad_tradea_a }}</span>
+      <span class="badge bg-primary fs-6"><i class="fas fa-arrow-up me-1"></i>{% trans "Recibes:" %} {{ deal.habilidad_tradea_b }}</span>
     </div>
 
     <hr>
@@ -39,15 +40,15 @@
     <!-- Info -->
     <div class="row text-center mb-3">
       <div class="col">
-        <small class="text-muted d-block">Semanas</small>
+        <small class="text-muted d-block">{% trans "Semanas" %}</small>
         <span class="fw-bold">{{ deal.semanas }}</span>
       </div>
       <div class="col">
-        <small class="text-muted d-block">Min/sesión</small>
+        <small class="text-muted d-block">{% trans "Min/sesión" %}</small>
         <span class="fw-bold">{{ deal.mins_sesion }}</span>
       </div>
       <div class="col">
-        <small class="text-muted d-block">Sesiones/semana</small>
+        <small class="text-muted d-block">{% trans "Sesiones/semana" %}</small>
         <span class="fw-bold">{{ deal.sesiones_por_semana }}</span>
       </div>
       <div class="col">
@@ -59,7 +60,7 @@
     <!-- Condiciones -->
     <div class="mb-3">
       <h6 class="fw-semibold text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.08em;">
-        <i class="fas fa-file-alt me-1"></i>Condiciones
+        <i class="fas fa-file-alt me-1"></i>{% trans "Condiciones" %}
       </h6>
       <p class="mb-0">{{ deal.condiciones }}</p>
     </div>
@@ -72,36 +73,36 @@
         {% if request.user != deal.usuario_b %}
           <form method="post" action="{% url 'core:deals-accept' deal.pk %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success"><i class="fas fa-check me-1"></i>Aceptar</button>
+            <button type="submit" class="btn btn-success"><i class="fas fa-check me-1"></i>{% trans "Aceptar" %}</button>
           </form>
         {% endif %}
         <form method="post" action="{% url 'core:deals-cancel' deal.pk %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>Cancelar</button>
+          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>{% trans "Cancelar" %}</button>
         </form>
 
       {% elif deal.estado == "ACEPTADO" %}
         <form method="post" action="{% url 'core:deals-start' deal.pk %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary"><i class="fas fa-play me-1"></i>Iniciar</button>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-play me-1"></i>{% trans "Iniciar" %}</button>
         </form>
         <form method="post" action="{% url 'core:deals-cancel' deal.pk %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>Cancelar</button>
+          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>{% trans "Cancelar" %}</button>
         </form>
 
       {% elif deal.estado == "EN CURSO" %}
         <form method="post" action="{% url 'core:deals-fin' deal.pk %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-secondary"><i class="fas fa-flag-checkered me-1"></i>Finalizar</button>
+          <button type="submit" class="btn btn-secondary"><i class="fas fa-flag-checkered me-1"></i>{% trans "Finalizar" %}</button>
         </form>
         <form method="post" action="{% url 'core:deals-cancel' deal.pk %}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>Cancelar</button>
+          <button type="submit" class="btn btn-danger"><i class="fas fa-times me-1"></i>{% trans "Cancelar" %}</button>
         </form>
 
       {% elif deal.estado == "FINALIZADO" or deal.estado == "CANCELADO" %}
-        <p class="text-muted fst-italic mb-0">Este acuerdo ya no puede modificarse.</p>
+        <p class="text-muted fst-italic mb-0">{% trans "Este acuerdo ya no puede modificarse." %}</p>
       {% endif %}
     </div>
 

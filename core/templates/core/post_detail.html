@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Detalle{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Detalle" %}{% endblock %}
 
 {% block content %}
 <a href="{% url 'core:post' %}" class="btn btn-outline-secondary mb-3">
@@ -37,16 +38,16 @@
     </p>
 
     <!-- Disponibilidad -->
-    <h6 class="fw-semibold"><i class="fas fa-clock me-1"></i>Disponibilidad</h6>
+    <h6 class="fw-semibold"><i class="fas fa-clock me-1"></i>{% trans "Disponibilidad" %}</h6>
     {% if post.autor.perfil.disponibilidad == 'Add your availability here\nAñade tu disponibilidad aquí' %}
-      <p class="text-muted fst-italic small">El usuario no tiene preferencias de disponibilidad.</p>
+      <p class="text-muted fst-italic small">{% trans "El usuario no tiene preferencias de disponibilidad." %}</p>
     {% else %}
       <p class="small">{{ post.autor.perfil.disponibilidad }}</p>
     {% endif %}
 
     <hr>
     <a href="{% url 'core:deals-create' %}?autor={{ post.autor.pk }}&post={{ post.pk }}" class="btn btn-primary">
-      <i class="fas fa-handshake me-1"></i>Proponer acuerdo
+      <i class="fas fa-handshake me-1"></i>{% trans "Proponer acuerdo" %}
     </a>
   </div>
 </div>

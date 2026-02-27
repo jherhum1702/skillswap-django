@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 
@@ -10,7 +11,7 @@
           type="search"
           name="q"
           class="form-control form-control-lg"
-          placeholder="Buscar habilidades..."
+          placeholder="{% trans 'Buscar habilidades...' %}"
           value="{{ request.GET.q }}"
         >
         <button class="btn btn-primary px-4" type="submit">

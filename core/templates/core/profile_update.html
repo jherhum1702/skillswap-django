@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Actualizar perfil{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Actualizar perfil" %}{% endblock %}
 
 {% block content %}
 <div class="card shadow-sm mx-auto" style="max-width: 650px;">
   <div class="card-body">
 
-    <h4 class="fw-bold mb-4"><i class="fas fa-pen me-2 text-primary"></i>Editar perfil</h4>
+    <h4 class="fw-bold mb-4"><i class="fas fa-pen me-2 text-primary"></i>{% trans "Editar perfil" %}</h4>
 
     <form action="{% url 'core:profile-update' %}" method="post">
       {% csrf_token %}
@@ -24,10 +25,10 @@
 
       <div class="d-flex gap-2 mt-4">
         <button type="submit" class="btn btn-primary">
-          <i class="fas fa-save me-1"></i>Guardar cambios
+          <i class="fas fa-save me-1"></i>{% trans "Guardar cambios" %}
         </button>
         <a href="{% url 'core:profile' %}" class="btn btn-outline-secondary">
-          <i class="fas fa-times me-1"></i>cancelar
+          <i class="fas fa-times me-1"></i>{% trans "Cancelar" %}
         </a>
       </div>
 

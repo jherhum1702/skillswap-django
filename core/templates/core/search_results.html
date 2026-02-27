@@ -13,7 +13,7 @@
           type="search"
           name="q"
           class="form-control form-control-lg"
-          placeholder="Buscar habilidades..."
+          placeholder="{% trans 'Buscar habilidades...' %}"
           value="{{ request.GET.q }}"
         >
         <button class="btn btn-primary px-4" type="submit">
@@ -25,7 +25,7 @@
 </div>
 
 <a href="{% url 'core:clear_filters' %}" class="btn btn-outline-secondary mb-3">
-  <i class="fas fa-arrow-left me-1"></i>Volver
+  <i class="fas fa-arrow-left me-1"></i>{% trans "Volver" %}
 </a>
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
@@ -38,11 +38,11 @@
 
           {% if post.tipo == "BUSCO" %}
             <span class="badge bg-warning text-dark text-uppercase">
-              <i class="fas fa-search me-1"></i>Busco
+              <i class="fas fa-search me-1"></i>{% trans "Busco" %}
             </span>
           {% else %}
             <span class="badge bg-success text-uppercase">
-              <i class="fas fa-hand-holding me-1"></i>Ofrezco
+              <i class="fas fa-hand-holding me-1"></i>{% trans "Ofrezco" %}
             </span>
           {% endif %}
 
@@ -60,11 +60,11 @@
 {% else %}
   <div class="text-center py-5">
     <i class="fas fa-search fa-3x text-muted mb-3"></i>
-    <h5 class="text-muted">No se encontraron publicaciones para "{{ request.GET.q }}"</h5>
-    <p class="text-muted small">Prueba buscando otra skill</p>
+    <h5 class="text-muted">{% blocktrans %}No se encontraron publicaciones para "{{ request.GET.q }}"{% endblocktrans %}</h5>
+    <p class="text-muted small">{% trans "Prueba buscando otra skill" %}</p>
     <div class="mb-4">
       <a href="{% url 'core:clear_filters' %}" class="btn btn-outline-primary mt-2">
-        <i class="fas fa-arrow-left me-1"></i>Volver al inicio
+        <i class="fas fa-arrow-left me-1"></i>{% trans "Volver al inicio" %}
       </a>
     </div>
     <div class="mt-2">
