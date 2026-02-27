@@ -5,9 +5,45 @@ from datetime import date, timedelta
 
 
 class Command(BaseCommand):
+    """Management command to populate the database with test data.
+
+    Creates the following entities in order: skills, users with their
+    profiles, skill assignments to profiles, posts, agreements and sessions.
+    All objects are created using ``get_or_create``, making the command
+    idempotent — it can be run multiple times without duplicating data.
+
+    Example:
+        Run from the Django project root::
+
+            python manage.py populate_test_data
+
+    Attributes:
+        help (str): Command description shown by Django when running
+            ``python manage.py help``.
+    """
     help = 'Populate db with test data'
 
     def handle(self, *args, **kwargs):
+        """Execute the full database population.
+
+        Iterates through five blocks in order: skills, users, posts,
+        agreements and sessions. Each block prints created records to the
+        console. Finishes with a summary showing the total count of each
+        entity processed in the current run.
+
+        Args:
+            *args: Positional arguments inherited from ``BaseCommand``.
+            **kwargs: Keyword arguments inherited from ``BaseCommand``.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: Caught and printed to console for individual failures
+                when creating posts, agreements or sessions, without stopping
+                the rest of the command execution.
+        """
+
         Usuario = get_user_model()
 
         # SKILLS
