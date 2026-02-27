@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import HttpRequest
+from django.utils import timezone
 
 
 class SpamMiddleware:
@@ -42,11 +43,8 @@ class SpamMiddleware:
         """
         if request.path == '/posts/create/' and request.method == 'POST':
             user = request.user
-            if hasattr(user, 'publicaciones') and user.publicaciones.filter(fecha_creacion__gte=timedelta(days=1)).count() >= 2:
-                messages.error(
-                    request,
-                    "You can't post more than two times in a day. Please try again later."
-                )
+            if hasattr(user, 'publicaciones') and user.publicaciones.filter(fecha_creacion__gte=timezone.now() - timedelta(days=1)).count() >= 2:
+                messages.error(request,"You can't post more than two times in a day. Please try again later.")
                 return redirect('core:home')
 
         response = self.get_response(request)
