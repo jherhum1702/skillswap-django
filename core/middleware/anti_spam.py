@@ -43,7 +43,7 @@ class SpamMiddleware:
         """
         if request.path == '/posts/create/' and request.method == 'POST':
             user = request.user
-            if hasattr(user, 'publicaciones') and user.publicaciones.filter(fecha_creacion__gte=timezone.now() - timedelta(days=1)).count() >= 2:
+            if hasattr(user, 'publicaciones') and user.publicaciones.filter(fecha_creacion__gte=timezone.now() - timedelta(days=1)).count() > 2:
                 messages.error(request,"You can't post more than two times in a day. Please try again later.")
                 return redirect('core:home')
 
