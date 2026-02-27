@@ -460,12 +460,3 @@ class PostCreate(forms.ModelForm):
             if not self.usuario.perfil.habilidades.filter(pk=habilidad.pk).exists():
                 raise forms.ValidationError('Solo puedes ofrecer habilidades que tienes en tu perfil.')
         return cleaned_data
-
-
-class PostUpdate(forms.ModelForm):
-    class Meta:
-        model = Publicacion
-        fields = ['tipo','descripcion','habilidad']
-        widgets = {'tipo': forms.Select(attrs={'class': 'form-control'}),
-                   'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
-                   'habilidad': forms.Select(attrs={'class': 'form-control'}),}

@@ -527,7 +527,30 @@ class PostCreateview(CreateView):
 
 class PostUpdateView(UpdateView):
     model = Publicacion
-    form_class = PostUpdate
+    form_class = PostCreate
     context_object_name = 'post'
     success_url = reverse_lazy('core:post')
     template_name = 'core/post_update.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mis_habilidades'] = list(
+            self.request.user.perfil.habilidades.values_list('id', flat=True)
+        )
+        return context
+
+class PostCloseView( View):
+    def post(self, request, pk):
+        publicacion = get_object_or_404(Publicacion, pk=pk, autor=request.user)
+        publicacion.estado = False
+        publicacion.save()
+        return redirect('core:post')

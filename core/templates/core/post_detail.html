@@ -45,9 +45,27 @@
     {% endif %}
 
     <hr>
-    <a href="{% url 'core:deals-create' %}?autor={{ post.autor.pk }}&post={{ post.pk }}" class="btn btn-primary">
-      <i class="fas fa-handshake me-1"></i>Proponer acuerdo
-    </a>
+    <div class="d-flex gap-2">
+      {% if request.user == post.autor %}
+        <a href="{% url 'core:post-update' post.pk %}" class="btn btn-outline-primary">
+          <i class="fas fa-pen me-1"></i>Actualizar
+        </a>
+      {% else %}
+        <a href="{% url 'core:deals-create' %}?autor={{ post.autor.pk }}&post={{ post.pk }}" class="btn btn-primary">
+          <i class="fas fa-handshake me-1"></i>Proponer acuerdo
+        </a>
+      {% endif %}
+
+      {% if request.user == post.autor and post.estado %}
+          <form method="post" action="{% url 'core:post-close' post.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">
+              <i class="fas fa-times-circle me-1"></i>Cerrar publicación
+            </button>
+          </form>
+      {% endif %}
+    </div>
+
   </div>
 </div>
 {% endblock %}
