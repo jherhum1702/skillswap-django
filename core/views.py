@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView, DeleteView
 from .forms import *
 from django.views.decorators.http import require_http_methods
 from .session_manager import SessionManager
@@ -380,206 +380,9 @@ class StatisticsView(TemplateView):
         context['recent_busco'] = Publicacion.objects.filter(tipo='BUSCO').order_by('-fecha_creacion')[:10]
         context['posts_ofrezco'] = Publicacion.objects.filter(tipo='OFREZCO').count()
         context['posts_busco'] = Publicacion.objects.filter(tipo='BUSCO').count()
-        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10] # There isn't any date field, had to use -id.
+        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10]
 
         return context
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -619,3 +422,28 @@ class DealsCreateView(CreateView):
         for error in form.non_field_errors():
             messages.error(self.request, error)
         return super().form_invalid(form)
+
+
+
+
+
+
+
+class DealsUpdateView(UpdateView):
+    pass
+
+
+
+class DealsDeleteView(DeleteView):
+    pass
+
+
+class DealsListView(ListView):
+    model = Acuerdo
+    context_object_name = 'deals'
+    template_name = 'core/dealslist.html'
+
+    def get_queryset(self):
+        return Acuerdo.objects.filter(
+            models.Q(usuario_a=self.request.user) | models.Q(usuario_b=self.request.user)
+        )

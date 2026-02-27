@@ -16,4 +16,5 @@ urlpatterns = [
     path('change-preference/', change_preference, name='change_preference'),
     path('clear-filters/', clear_filters, name='clear_filters'),
     path('deals/create/', DealsCreateView.as_view(), name='deals-create'),
+    path('deals/', DealsListView.as_view(), name='deals'),
 ]
