@@ -39,7 +39,7 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link">Acuerdos</a>
+                            <a class="nav-link" href="{% url 'core:deals' %}">Acuerdos</a>
                         </li>
                     {% endif %}
                 </ul>

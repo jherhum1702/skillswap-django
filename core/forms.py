@@ -335,3 +335,99 @@ class ProfileForm(forms.ModelForm):
                     habilidades.append(habilidad)
             profile.habilidades.set(habilidades)
         return profile
+
+
+class DealsPost(forms.ModelForm):
+
+  def __init__(self, *args, usuario_a=None, usuario_b=None, publicacion=None, **kwargs):
+    super().__init__(*args, **kwargs)
+    self._publicacion = publicacion
+    if usuario_a:
+      self.instance.usuario_a = usuario_a
+    if usuario_b:
+      self.instance.usuario_b = usuario_b
+    if publicacion and usuario_b:
+      if publicacion.tipo == 'OFREZCO':
+        self.fields['habilidad_tradea_a'].queryset = Habilidad.objects.filter(pk=publicacion.habilidad.pk)
+        self.fields['habilidad_tradea_a'].initial = publicacion.habilidad
+        self.fields['habilidad_tradea_a'].widget.attrs['class'] = 'form-select'  # ← añade esto
+        self.fields['habilidad_tradea_a'].widget.attrs['style'] = 'pointer-events: none;'
+        self.instance.habilidad_tradea_a = publicacion.habilidad
+        self.fields['habilidad_tradea_b'].queryset = usuario_b.perfil.habilidades.all()
+        self.fields['habilidad_tradea_b'].widget.attrs['class'] = 'form-select'
+      else:  # BUSCO
+        self.fields['habilidad_tradea_a'].queryset = usuario_a.perfil.habilidades.all()
+        self.fields['habilidad_tradea_a'].widget.attrs['class'] = 'form-select'
+        self.fields['habilidad_tradea_b'].queryset = Habilidad.objects.filter(pk=publicacion.habilidad.pk)
+        self.fields['habilidad_tradea_b'].initial = publicacion.habilidad
+        self.fields['habilidad_tradea_b'].widget.attrs['class'] = 'form-select'
+        self.fields['habilidad_tradea_b'].widget.attrs['style'] = 'pointer-events: none;'
+
+  def clean(self):
+    cleaned_data = super().clean()
+    publicacion = self._publicacion
+    if publicacion and publicacion.tipo == 'BUSCO':
+      if self.instance.usuario_b and not self.instance.usuario_b.perfil.habilidades.filter(
+              pk=publicacion.habilidad.pk).exists():
+        raise forms.ValidationError('No tienes la habilidad que busca este usuario.')
+    return cleaned_data
+
+  class Meta:
+    model = Acuerdo
+    fields = ['habilidad_tradea_a', 'habilidad_tradea_b', 'semanas', 'mins_sesion', 'sesiones_por_semana',
+              'condiciones']
+    widgets = {
+      'semanas': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'mins_sesion': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'sesiones_por_semana': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'condiciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter your conditions'}),
+    }
+
+
+class DealsPostUpdate(forms.ModelForm):
+
+  def __init__(self, *args, usuario_a=None, usuario_b=None, publicacion=None, **kwargs):
+    super().__init__(*args, **kwargs)
+    self._publicacion = publicacion
+    if usuario_a:
+      self.instance.usuario_a = usuario_a
+    if usuario_b:
+      self.instance.usuario_b = usuario_b
+    if publicacion and usuario_b:
+      if publicacion.tipo == 'OFREZCO':
+        self.fields['habilidad_tradea_a'].queryset = Habilidad.objects.filter(pk=publicacion.habilidad.pk)
+        self.fields['habilidad_tradea_a'].initial = publicacion.habilidad
+        self.fields['habilidad_tradea_a'].widget.attrs['class'] = 'form-select'  # ← añade esto
+        self.fields['habilidad_tradea_a'].widget.attrs['style'] = 'pointer-events: none;'
+        self.instance.habilidad_tradea_a = publicacion.habilidad
+        self.fields['habilidad_tradea_b'].queryset = usuario_b.perfil.habilidades.all()
+        self.fields['habilidad_tradea_b'].widget.attrs['class'] = 'form-select'
+      else:  # BUSCO
+        self.fields['habilidad_tradea_a'].queryset = usuario_a.perfil.habilidades.all()
+        self.fields['habilidad_tradea_a'].widget.attrs['class'] = 'form-select'
+        self.fields['habilidad_tradea_b'].queryset = Habilidad.objects.filter(pk=publicacion.habilidad.pk)
+        self.fields['habilidad_tradea_b'].initial = publicacion.habilidad
+        self.fields['habilidad_tradea_b'].widget.attrs['class'] = 'form-select'
+        self.fields['habilidad_tradea_b'].widget.attrs['style'] = 'pointer-events: none;'
+
+  def clean(self):
+    cleaned_data = super().clean()
+    publicacion = self._publicacion
+    if publicacion and publicacion.tipo == 'BUSCO':
+      if self.instance.usuario_b and not self.instance.usuario_b.perfil.habilidades.filter(
+              pk=publicacion.habilidad.pk).exists():
+        raise forms.ValidationError('No tienes la habilidad que busca este usuario.')
+    return cleaned_data
+
+  class Meta:
+    model = Acuerdo
+    fields = ['habilidad_tradea_a', 'habilidad_tradea_b', 'semanas', 'mins_sesion', 'sesiones_por_semana',
+              'condiciones','estado']
+    widgets = {
+      'semanas': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'mins_sesion': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'sesiones_por_semana': forms.NumberInput(attrs={'class': 'form-control', 'pattern': '^[0-9_]+$'}),
+      'condiciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter your conditions'}),
+    }
+
+

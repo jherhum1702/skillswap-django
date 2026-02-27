@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Acuerdos{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    {% if message.tags == 'error' %}
+    <div class="modal fade" id="errorModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title text-danger">
+              <i class="fas fa-exclamation-circle me-2"></i>Error
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">{{ message }}</div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+  {% endfor %}
+{% endif %}
+
+<div class="card shadow-sm mx-auto" style="max-width: 650px;">
+  <div class="card-body">
+    <h4 class="fw-bold mb-4"><i class="fas fa-handshake me-2 text-primary"></i>Proponer acuerdo</h4>
+
+    <form method="post" action="{% url 'core:deals-create' %}?autor={{ request.GET.autor }}&post={{ request.GET.post }}">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold small text-muted text-uppercase" style="letter-spacing: 0.08em;">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small mt-1">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-handshake me-1"></i>Enviar propuesta
+        </button>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+          <i class="fas fa-times me-1"></i>Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% block extra_js %}
+{% for message in messages %}
+  {% if message.tags == 'error' %}
+  <script>
+    var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    errorModal.show();
+  </script>
+  {% endif %}
+{% endfor %}
+{% endblock %}
+
+{% endblock %}

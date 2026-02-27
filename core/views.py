@@ -1,11 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
+from django.db import IntegrityError
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView
+from django.views import View
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView, DeleteView
 from .forms import *
 from django.views.decorators.http import require_http_methods
 from .session_manager import SessionManager
@@ -378,6 +381,104 @@ class StatisticsView(TemplateView):
         context['recent_busco'] = Publicacion.objects.filter(tipo='BUSCO').order_by('-fecha_creacion')[:10]
         context['posts_ofrezco'] = Publicacion.objects.filter(tipo='OFREZCO').count()
         context['posts_busco'] = Publicacion.objects.filter(tipo='BUSCO').count()
-        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10] # There isn't any date field, had to use -id.
+        context['actividad_reciente'] = Acuerdo.objects.select_related('usuario_a', 'usuario_b').order_by('-id')[:10]
 
         return context
+
+
+
+
+class DealsCreateView(CreateView):
+    model = Acuerdo
+    form_class = DealsPost
+    template_name = 'core/dealsCreate.html'
+    success_url = reverse_lazy('core:home')
+
+    def get_usuario_a(self):
+        return get_object_or_404(Usuario, pk=self.request.GET.get('autor'))
+
+    def get_publicacion(self):
+        return get_object_or_404(Publicacion, pk=self.request.GET.get('post'))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['usuario_a'] = self.get_usuario_a()
+        kwargs['usuario_b'] = self.request.user
+        kwargs['publicacion'] = self.get_publicacion()
+        return kwargs
+
+    def form_valid(self, form):
+        acuerdo = form.save(commit=False)
+        acuerdo.usuario_a = self.get_usuario_a()
+        acuerdo.usuario_b = self.request.user
+        acuerdo.habilidad_tradea_a = self.get_publicacion().habilidad
+        try:
+            acuerdo.save()
+        except IntegrityError:
+            messages.error(self.request, 'Ya tienes un acuerdo activo con esta persona para estas habilidades.')
+            return self.form_invalid(form)
+        return redirect('core:home')
+
+    def form_invalid(self, form):
+        for error in form.non_field_errors():
+            messages.error(self.request, error)
+        return super().form_invalid(form)
+
+
+
+
+
+
+
+class DealsUpdateAccepView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        if request.user == acuerdo.usuario_b:
+            messages.error(request, 'No puedes aceptar un acuerdo que tú mismo has propuesto.')
+            return redirect('core:deals-detail', pk=pk)
+        acuerdo.estado = 'ACEPTADO'
+        acuerdo.save()
+        return redirect('core:deals')
+
+class DealsUpdateCancelView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'CANCELADO'
+        acuerdo.save()
+        return redirect('core:deals')
+
+class DealsUpdateFinView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'FINALIZADO'
+        acuerdo.save()
+        return redirect('core:deals')
+class DealsUpdateStartView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'EN CURSO'
+        acuerdo.save()
+        return redirect('core:deals')
+
+
+
+
+class DealsDeleteView(DeleteView):
+    pass
+
+
+class DealsDetailView(DetailView):
+    model = Acuerdo
+    context_object_name = 'deal'
+    template_name = 'core/dealsDetail.html'
+    success_url = reverse_lazy('core:deals')
+
+class DealsListView(ListView):
+    model = Acuerdo
+    context_object_name = 'deals'
+    template_name = 'core/dealslist.html'
+
+    def get_queryset(self):
+        return Acuerdo.objects.filter(
+            models.Q(usuario_a=self.request.user) | models.Q(usuario_b=self.request.user)
+        )

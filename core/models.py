@@ -28,6 +28,8 @@ class Habilidad(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     estado = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.nombre
 
 class Usuario(AbstractUser):
     """
@@ -404,6 +406,12 @@ def validate_date_today_or_later(value):
     """
     if value < timezone.now().date():
         raise ValidationError('The date must be today or later.')
+
+
+
+
+
+
 
 class Sesion(models.Model):
     """
