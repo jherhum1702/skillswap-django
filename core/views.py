@@ -472,7 +472,6 @@ class DealsDeleteView(DeleteView):
 
 class DealsDetailView(DetailView):
     model = Acuerdo
-    context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
 
