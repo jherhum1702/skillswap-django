@@ -157,6 +157,10 @@ class PostDetailview(DetailView):
     template_name = 'core/post_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_proposals'] = context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.autor,estado='PROPUESTO').count() #MIRAR SI ES USUARIO_A O B
+        return context
 
 class CustomLogin(LoginView):
     """
