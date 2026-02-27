@@ -154,13 +154,13 @@ class Postlistview(ListView):
     template_name = 'core/post_list.html'
     context_object_name = 'posts'
 
-class PostDetailView(DetailView):
+class PostDetailview(DetailView):
     model = Publicacion
     template_name = 'core/post_detail.html'
     context_object_name = 'post'
 
     def get_object(self, queryset=None):
-        return Publicacion.objects.annotate(total_proposals=Count('acuerdos',filter=Q(acuerdos__estado='PROPUESTO') )).get(pk=self.kwargs['pk'])
+        return Publicacion.objects.annotate(total_proposals=Count('acuerdo', filter=Q(acuerdo__estado='PROPUESTO'))).get(pk=self.kwargs['pk'])
 
 class CustomLogin(LoginView):
     """
