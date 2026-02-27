@@ -520,3 +520,14 @@ class PostCreateview(CreateView):
             self.request.user.perfil.habilidades.values_list('id', flat=True)
         )
         return context
+
+
+
+
+
+class PostUpdateView(UpdateView):
+    model = Publicacion
+    form_class = PostUpdate
+    context_object_name = 'post'
+    success_url = reverse_lazy('core:post')
+    template_name = 'core/post_update.html'
