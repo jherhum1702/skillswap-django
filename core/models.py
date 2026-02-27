@@ -317,6 +317,7 @@ class Acuerdo(models.Model):
 
     usuario_a = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name='acuerdos_a', related_query_name='acuerdo_a') # User won't be able to delete its account unless the trade has been finished.
     usuario_b = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name='acuerdos_b', related_query_name='acuerdo_b') # User won't be able to delete its account unless the trade has been finished.
+    publicacion = models.ForeignKey('Publicacion',on_delete=models.SET_NULL,null=True,blank=True,related_name='acuerdos',related_query_name='acuerdo')
     semanas = models.PositiveIntegerField(default=1) # The user won't be able to use a negative integer.
     mins_sesion = models.PositiveIntegerField(default=60) # The user won't be able to use a negative integer. Default 1 hour
     sesiones_por_semana = models.PositiveIntegerField(default=1) # The user won't be able to use a negative integer. Default 1 session per week.
