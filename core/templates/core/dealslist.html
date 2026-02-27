@@ -3,6 +3,7 @@
 {% block title %}{% trans "Acuerdos" %}{% endblock %}
 
 {% block content %}
+
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
   {% for deal in deals %}
   <div class="col">
@@ -17,16 +18,16 @@
               <span class="text-muted mx-1">↔</span>
               {{ deal.usuario_b }}
             </span>
-            {% if deal.estado == "PROPUESTO" %}
-              <span class="badge bg-warning text-dark">{{ deal.estado }}</span>
+            {% if deal.estado == "EN CURSO" %}
+              <span class="badge bg-primary">{{ deal.estado }}</span>
             {% elif deal.estado == "ACEPTADO" %}
               <span class="badge bg-success">{{ deal.estado }}</span>
-            {% elif deal.estado == "EN CURSO" %}
-              <span class="badge bg-primary">{{ deal.estado }}</span>
+            {% elif deal.estado == "PROPUESTO" %}
+              <span class="badge bg-warning text-dark">{{ deal.estado }}</span>
+            {% elif deal.estado == "CANCELADO" %}
+              <span class="badge bg-danger">{{ deal.estado }}</span>
             {% elif deal.estado == "FINALIZADO" %}
               <span class="badge bg-secondary">{{ deal.estado }}</span>
-            {% else %}
-              <span class="badge bg-danger">{{ deal.estado }}</span>
             {% endif %}
           </div>
 

@@ -3,6 +3,9 @@
 {% block title %}{% trans "Detalle" %}{% endblock %}
 
 {% block content %}
+<a href="{% url 'core:post' %}" class="btn btn-outline-secondary mb-3">
+  <i class="fas fa-arrow-left me-1"></i>Volver
+</a>
 <div class="card shadow-sm mx-auto" style="max-width: 700px;">
   <div class="card-body">
 
@@ -24,6 +27,15 @@
     <p class="card-text">{{ post.descripcion }}</p>
 
     <hr>
+
+    <h6 class="fw-semibold"><i class="fas fa-handshake me-1"></i>Propuestas recibidas</h6>
+    <p class="small">
+      {% if post.total_proposals > 0 %}
+        <span class="badge bg-primary">{{ post.total_proposals }}</span> Acuerdo{{ post.total_proposals|pluralize }} pendiente{{ post.total_proposals|pluralize }}
+      {% else %}
+        <span class="text-muted fst-italic">Sin propuestas pendientes.</span>
+      {% endif %}
+    </p>
 
     <!-- Disponibilidad -->
     <h6 class="fw-semibold"><i class="fas fa-clock me-1"></i>{% trans "Disponibilidad" %}</h6>
