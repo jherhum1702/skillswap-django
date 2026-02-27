@@ -319,7 +319,7 @@ def clear_filters(request):
         path('clear-filters/', clear_filters, name='clear_filters'),
     """
     SessionManager.clear_filters(request)
-    return redirect(reverse_lazy('core:home'))
+    return redirect('core:home')
 
 @require_http_methods(["POST"])
 def change_preference(request):

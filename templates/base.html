@@ -1,6 +1,8 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="{% if theme == 'dark' %}dark{% else %}light{% endif %}">
+<html lang="{% if lang == 'en' %}en{% else %}es{% endif %}" data-bs-theme="{% if theme == 'dark' %}dark{% else %}light{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,14 +34,14 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">Inicio</a>
+                        <a class="nav-link" href="{% url 'core:home' %}">{% trans "Inicio" %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:post' %}">Posts</a>
+                        <a class="nav-link" href="{% url 'core:post' %}">{% trans "Posts" %}</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'core:deals' %}">Acuerdos</a>
+                            <a class="nav-link" href="{% url 'core:deals' %}">{% trans "Acuerdos" %}</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -91,25 +93,25 @@
                                 </span></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'core:profile' %}">
-                                    <i class="fas fa-user me-2"></i>Mi Perfil
+                                    <i class="fas fa-user me-2"></i>{% trans "Mi Perfil" %}
                                 </a></li>
                               <li>
                                 <form method="post" action="{% url 'core:logout' %}" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="dropdown-item border-0 bg-transparent w-100 text-start" onclick="return confirm('¿Cerrar sesión?')">
-                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</button>
+                                <i class="fas fa-sign-out-alt me-2"></i>{% trans "Cerrar Sesión" %}</button>
                                 </form>
                             </ul>
 
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'core:login' %}">
-                                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                                <i class="fas fa-sign-in-alt me-1"></i>{% trans "Iniciar Sesión" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'core:registro' %}">
-                                Registrarse
+                                {% trans "Registrarse" %}
                             </a>
                         </li>
                     {% endif %}
@@ -142,7 +144,7 @@
     <footer class="footer fixed-bottom py-2" style="background-color: #0D6EFD">
         <div class="container text-center" >
             <p class="mb-0 text-muted">
-                &copy; 2026 SkillSwap. Todos los derechos reservados para el grupo 4 (José, Andrés y Fabián)
+                &copy; 2026 SkillSwap. {% trans "Todos los derechos reservados para el grupo 4 (José, Andrés y Fabián)" %}
             </p>
         </div>
     </footer>

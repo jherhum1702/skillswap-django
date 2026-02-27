@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Instala dependencias del sistema necesarias para compliar paquetes como psycopg2
 RUN apt-get update && apt-get install -y \
+    gettext \
     build-essential \
     libpq-dev \
     gcc \

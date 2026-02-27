@@ -1,0 +1,400 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-27 20:22+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#: core/templates/core/DealsUpdate.html:3
+#: core/templates/core/dealsCreate.html:3 core/templates/core/dealslist.html:3
+#: core/templates/core/statistics.html:72 templates/base.html:44
+msgid "Acuerdos"
+msgstr ""
+
+#: core/templates/core/DealsUpdate.html:15
+#: core/templates/core/dealsCreate.html:15
+msgid "Error"
+msgstr ""
+
+#: core/templates/core/DealsUpdate.html:21
+#: core/templates/core/dealsCreate.html:21
+msgid "Cerrar"
+msgstr ""
+
+#: core/templates/core/DealsUpdate.html:37
+#: core/templates/core/dealsCreate.html:37
+#: core/templates/core/post_detail.html:38
+msgid "Proponer acuerdo"
+msgstr ""
+
+#: core/templates/core/DealsUpdate.html:56
+#: core/templates/core/dealsCreate.html:56
+msgid "Enviar propuesta"
+msgstr ""
+
+#: core/templates/core/DealsUpdate.html:59
+#: core/templates/core/dealsCreate.html:59
+#: core/templates/core/dealsDetail.html:74
+#: core/templates/core/dealsDetail.html:84
+#: core/templates/core/dealsDetail.html:94
+#: core/templates/core/profile_update.html:31
+msgid "Cancelar"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:3
+msgid "Detalle Acuerdo"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:31
+msgid "Das:"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:32
+msgid "Recibes:"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:40
+msgid "Semanas"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:44
+msgid "Min/sesión"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:48
+msgid "Sesiones/semana"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:56
+msgid "Condiciones"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:69
+msgid "Aceptar"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:80
+msgid "Iniciar"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:90
+msgid "Finalizar"
+msgstr ""
+
+#: core/templates/core/dealsDetail.html:98
+msgid "Este acuerdo ya no puede modificarse."
+msgstr ""
+
+#: core/templates/core/dealslist.html:46
+msgid "semana"
+msgid_plural "semanas"
+msgstr[0] ""
+msgstr[1] ""
+
+#: core/templates/core/home.html:14 core/templates/core/search_results.html:16
+msgid "Buscar habilidades..."
+msgstr ""
+
+#: core/templates/core/post_detail.html:3
+msgid "Detalle"
+msgstr ""
+
+#: core/templates/core/post_detail.html:29 core/templates/core/profile.html:39
+msgid "Disponibilidad"
+msgstr ""
+
+#: core/templates/core/post_detail.html:31
+msgid "El usuario no tiene preferencias de disponibilidad."
+msgstr ""
+
+#: core/templates/core/post_list.html:3
+msgid "Publicaciones"
+msgstr ""
+
+#: core/templates/core/post_list.html:17
+#: core/templates/core/search_results.html:41
+#: core/templates/core/statistics.html:143
+#: core/templates/core/statistics.html:166
+msgid "Busco"
+msgstr ""
+
+#: core/templates/core/post_list.html:21
+#: core/templates/core/search_results.html:45
+#: core/templates/core/statistics.html:142
+#: core/templates/core/statistics.html:164
+msgid "Ofrezco"
+msgstr ""
+
+#: core/templates/core/profile.html:3
+msgid "Perfil"
+msgstr ""
+
+#: core/templates/core/profile.html:21
+msgid "Editar"
+msgstr ""
+
+#: core/templates/core/profile.html:29
+msgid "Biografía"
+msgstr ""
+
+#: core/templates/core/profile.html:42
+msgid "Sin preferencias de disponibilidad."
+msgstr ""
+
+#: core/templates/core/profile.html:53
+msgid "Habilidades"
+msgstr ""
+
+#: core/templates/core/profile.html:59
+msgid "Sin habilidades registradas."
+msgstr ""
+
+#: core/templates/core/profile_update.html:3
+msgid "Actualizar perfil"
+msgstr ""
+
+#: core/templates/core/profile_update.html:9
+msgid "Editar perfil"
+msgstr ""
+
+#: core/templates/core/profile_update.html:28
+msgid "Guardar cambios"
+msgstr ""
+
+#: core/templates/core/search_results.html:3
+msgid "Resultados"
+msgstr ""
+
+#: core/templates/core/search_results.html:28
+msgid "Volver"
+msgstr ""
+
+#: core/templates/core/search_results.html:63
+#, python-format
+msgid "No se encontraron publicaciones para \"%(request.GET.q)s\""
+msgstr ""
+
+#: core/templates/core/search_results.html:64
+msgid "Prueba buscando otra skill"
+msgstr ""
+
+#: core/templates/core/search_results.html:67
+msgid "Volver al inicio"
+msgstr ""
+
+#: core/templates/core/statistics.html:4
+msgid "Dashboard"
+msgstr ""
+
+#: core/templates/core/statistics.html:10
+msgid "Panel de Estadísticas"
+msgstr ""
+
+#: core/templates/core/statistics.html:11
+msgid "Bienvenido"
+msgstr ""
+
+#: core/templates/core/statistics.html:20
+msgid "Posts Publicados"
+msgstr ""
+
+#: core/templates/core/statistics.html:32
+msgid "Acuerdos Activos"
+msgstr ""
+
+#: core/templates/core/statistics.html:44
+msgid "Habilidades Ofrecidas"
+msgstr ""
+
+#: core/templates/core/statistics.html:56
+msgid "Usuarios Registrados"
+msgstr ""
+
+#: core/templates/core/statistics.html:77
+#: core/templates/core/statistics.html:115
+msgid "Total"
+msgstr ""
+
+#: core/templates/core/statistics.html:81
+msgid "Propuestos"
+msgstr ""
+
+#: core/templates/core/statistics.html:85
+msgid "Aceptados"
+msgstr ""
+
+#: core/templates/core/statistics.html:89
+#: core/templates/core/statistics.html:213
+msgid "En Curso"
+msgstr ""
+
+#: core/templates/core/statistics.html:93
+msgid "Finalizados"
+msgstr ""
+
+#: core/templates/core/statistics.html:97
+msgid "Cancelados"
+msgstr ""
+
+#: core/templates/core/statistics.html:110
+msgid "Sesiones"
+msgstr ""
+
+#: core/templates/core/statistics.html:119
+msgid "Activas"
+msgstr ""
+
+#: core/templates/core/statistics.html:123
+msgid "Finalizadas"
+msgstr ""
+
+#: core/templates/core/statistics.html:140
+msgid "Posts Recientes"
+msgstr ""
+
+#: core/templates/core/statistics.html:151
+msgid "Título"
+msgstr ""
+
+#: core/templates/core/statistics.html:152
+msgid "Autor"
+msgstr ""
+
+#: core/templates/core/statistics.html:153
+msgid "Tipo"
+msgstr ""
+
+#: core/templates/core/statistics.html:154
+#: core/templates/core/statistics.html:249
+msgid "Estado"
+msgstr ""
+
+#: core/templates/core/statistics.html:171
+#: core/templates/core/statistics.html:261
+msgid "Activo"
+msgstr ""
+
+#: core/templates/core/statistics.html:173
+#: core/templates/core/statistics.html:263
+msgid "Inactivo"
+msgstr ""
+
+#: core/templates/core/statistics.html:179
+msgid "No hay posts aún."
+msgstr ""
+
+#: core/templates/core/statistics.html:193
+msgid "Actividad Reciente"
+msgstr ""
+
+#: core/templates/core/statistics.html:209
+msgid "Propuesto"
+msgstr ""
+
+#: core/templates/core/statistics.html:211
+msgid "Aceptado"
+msgstr ""
+
+#: core/templates/core/statistics.html:215
+msgid "Finalizado"
+msgstr ""
+
+#: core/templates/core/statistics.html:217
+msgid "Cancelado"
+msgstr ""
+
+#: core/templates/core/statistics.html:224
+msgid "Sin actividad reciente."
+msgstr ""
+
+#: core/templates/core/statistics.html:238
+msgid "Usuarios Moderadores"
+msgstr ""
+
+#: core/templates/core/statistics.html:246
+msgid "Usuario"
+msgstr ""
+
+#: core/templates/core/statistics.html:247
+msgid "Nombre"
+msgstr ""
+
+#: core/templates/core/statistics.html:248
+msgid "Email"
+msgstr ""
+
+#: core/templates/core/statistics.html:250
+msgid "Superusuario"
+msgstr ""
+
+#: core/templates/core/statistics.html:268
+msgid "Sí"
+msgstr ""
+
+#: core/templates/core/statistics.html:270
+msgid "No"
+msgstr ""
+
+#: core/templates/core/statistics.html:276
+msgid "No hay moderadores registrados."
+msgstr ""
+
+#: templates/base.html:37
+msgid "Inicio"
+msgstr ""
+
+#: templates/base.html:40
+msgid "Posts"
+msgstr ""
+
+#: templates/base.html:96
+msgid "Mi Perfil"
+msgstr ""
+
+#: templates/base.html:102
+msgid "Cerrar Sesión"
+msgstr ""
+
+#: templates/base.html:109
+msgid "Iniciar Sesión"
+msgstr ""
+
+#: templates/base.html:114 templates/registration/registration.html:16
+msgid "Registrarse"
+msgstr ""
+
+#: templates/base.html:147
+msgid "Todos los derechos reservados para el grupo 4 (José, Andrés y Fabián)"
+msgstr ""
+
+#: templates/registration/login.html:4 templates/registration/login.html:11
+#: templates/registration/login.html:17
+msgid "Iniciar sesión"
+msgstr ""
+
+#: templates/registration/registration.html:4
+#: templates/registration/registration.html:11
+msgid "Registro"
+msgstr ""
+
+#: templates/registration/registration.html:20
+msgid "¿Ya tienes cuenta?"
+msgstr ""
+
+#: templates/registration/registration.html:20
+msgid "Inicia sesión"
+msgstr ""

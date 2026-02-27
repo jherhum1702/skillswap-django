@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-    Registro
+    {% trans "Registro" %}
 {% endblock %}
 {% block content %}
 <div class="container py-3">
     <div class="row justify-content-center py-1">
         <div class="col-md-6 col-lg-4 py-1">
             <div class="card shadow p-4">
-                <h3 class="text-center mb-4">Registro</h3>
+                <h3 class="text-center mb-4">{% trans "Registro" %}</h3>
                 <form action="{% url 'core:registro' %}" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-primary w-100 mt-3">
-                        📝 Registrarse
+                        📝 {% trans "Registrarse" %}
                     </button>
                 </form>
                 <div class="text-center mt-3">
-                    <small>¿Ya tienes cuenta? <a href="{% url 'core:login' %}">Inicia sesión</a></small>
+                    <small>{% trans "¿Ya tienes cuenta?" %} <a href="{% url 'core:login' %}">{% trans "Inicia sesión" %}</a></small>
                 </div>
             </div>
         </div>
