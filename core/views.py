@@ -7,6 +7,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, TemplateView, DeleteView
 from .forms import *
 from django.views.decorators.http import require_http_methods
@@ -429,14 +430,48 @@ class DealsCreateView(CreateView):
 
 
 
-class DealsUpdateView(UpdateView):
-    pass
+class DealsUpdateAccepView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        if request.user == acuerdo.usuario_b:
+            messages.error(request, 'No puedes aceptar un acuerdo que tú mismo has propuesto.')
+            return redirect('core:deals-detail', pk=pk)
+        acuerdo.estado = 'ACEPTADO'
+        acuerdo.save()
+        return redirect('core:deals')
+
+class DealsUpdateCancelView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'CANCELADO'
+        acuerdo.save()
+        return redirect('core:deals')
+
+class DealsUpdateFinView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'FINALIZADO'
+        acuerdo.save()
+        return redirect('core:deals')
+class DealsUpdateStartView(View):
+    def post(self, request, pk):
+        acuerdo = get_object_or_404(Acuerdo, pk=pk)
+        acuerdo.estado = 'EN CURSO'
+        acuerdo.save()
+        return redirect('core:deals')
+
 
 
 
 class DealsDeleteView(DeleteView):
     pass
 
+
+class DealsDetailView(DetailView):
+    model = Acuerdo
+    context_object_name = 'deal'
+    template_name = 'core/dealsDetail.html'
+    success_url = reverse_lazy('core:deals')
 
 class DealsListView(ListView):
     model = Acuerdo

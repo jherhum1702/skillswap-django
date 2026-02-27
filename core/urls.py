@@ -17,4 +17,9 @@ urlpatterns = [
     path('clear-filters/', clear_filters, name='clear_filters'),
     path('deals/create/', DealsCreateView.as_view(), name='deals-create'),
     path('deals/', DealsListView.as_view(), name='deals'),
+    path('deals/<int:pk>/accept/', DealsUpdateAccepView.as_view(), name='deals-accept'),
+    path('deals/<int:pk>/cancel/', DealsUpdateCancelView.as_view(), name='deals-cancel'),
+    path('deals/<int:pk>/fin/', DealsUpdateFinView.as_view(), name='deals-fin'),
+    path('deals/<int:pk>/',DealsDetailView.as_view(), name='deals-detail'),
+    path('deals/<int:pk>/start/', DealsUpdateStartView.as_view(), name='deals-start'),
 ]
