@@ -33,6 +33,9 @@ EXPOSE 8000
 # Cambia al usuario no root para ejecutar la aplicación
 USER django
 
+# Compila los archivos de traducción (.po a .mo) antes de ejecutar la app
+RUN python manage.py compilemessages
+
 # Comando para ejecutar la aplicación usando Gunicorn, un servidor WSGI recomendado para producción
 CMD ["gunicorn", "skillswap.wsgi:application", "--bind", "0.0.0.0:8000"]
 
