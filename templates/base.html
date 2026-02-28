@@ -11,11 +11,18 @@
     <!-- Font Awesome icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <style>
-        .navbar-brand { font-weight: bold; }
-        .main-content { min-height: 70vh; }
-        .footer { background: #f8f9fa; }
-    </style>
+<style>
+    .navbar-brand { font-weight: bold; }
+    .footer { background: #f8f9fa; }
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .main-content {
+        flex: 1;
+    }
+</style>
 </head>
 <body>
     <!-- NAVBAR -->
@@ -119,37 +126,45 @@
     </nav>
 
     <!-- ALERTAS -->
-    {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+{% if messages %}
+    {% for message in messages %}
+        <div class="toast-container position-fixed top-50 start-50 translate-middle" style="z-index: 9999">
+            <div class="toast show align-items-center text-bg-danger border-0 shadow-lg" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body fs-6">
+                        <i class="fas fa-ban me-2"></i>{{ message }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    {% endif %}
-
+    {% endfor %}
+{% endif %}
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
-        <div class="container mt-4">
+        <div class="container mt-4 mb-5">
             {% block content %}
             {% endblock %}
         </div>
     </main>
 
     <!-- FOOTER -->
-    <footer class="footer fixed-bottom py-2" style="background-color: #0D6EFD">
-        <div class="container text-center" >
+    <footer class="footer py-2" style="background-color: #0D6EFD">
+        <div class="container text-center">
             <p class="mb-0 text-muted">
                 &copy; 2026 SkillSwap. Todos los derechos reservados para el grupo 4 (José, Andrés y Fabián)
             </p>
         </div>
     </footer>
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+    document.querySelectorAll('.toast').forEach(toast => {
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    });
+</script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
