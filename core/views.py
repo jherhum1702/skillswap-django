@@ -610,3 +610,34 @@ class SesionLisView(ListView):
         return Sesion.objects.filter(
             Q(acuerdo__usuario_a=self.request.user) | Q(acuerdo__usuario_b=self.request.user)
         )
+
+
+
+
+
+
+
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .serializers import *
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+    permission_classes = [IsAuthenticated]
+
+class PublicacionViewSet(viewsets.ModelViewSet):
+    queryset = Publicacion.objects.all()
+    serializer_class = PublicacionSerializer
+    permission_classes = [IsAuthenticated]
+
+class AcuerdoViewSet(viewsets.ModelViewSet):
+    queryset = Acuerdo.objects.all()
+    serializer_class = AcuerdoSerializer
+    permission_classes = [IsAuthenticated]
+
+class SesionViewSet(viewsets.ModelViewSet):
+    queryset = Sesion.objects.all()
+    serializer_class = SesionSerializer
+    permission_classes = [IsAuthenticated]
