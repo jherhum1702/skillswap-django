@@ -470,6 +470,9 @@ class DealsDetailView(DetailView):
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
 
+    def get_queryset(self):
+        return Acuerdo.objects.annotate(total_mins=F('semanas') * F('sesiones_por_semana') * F('mins_sesion'))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['estado'] = 'Activa' if self.object.estado else 'Cerrada'
