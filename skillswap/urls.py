@@ -22,7 +22,10 @@ from django.http import Http404
 original_login = admin.site.login
 
 def secure_admin_login(request, **kwargs):
-    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+    if not request.user.is_authenticated:
+        messages.error(request, 'Debes iniciar sesión para acceder al panel de administración.')
+        return redirect('core:login')
+    if not request.user.is_staff and not request.user.is_superuser:
         messages.error(request, 'No tienes permisos para acceder al panel de administración.')
         return redirect('core:login')
     return original_login(request, **kwargs)
