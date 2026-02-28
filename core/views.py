@@ -464,12 +464,6 @@ class DealsUpdateStartView(View):
         return redirect('core:deals')
 
 
-
-
-class DealsDeleteView(DeleteView):
-    pass
-
-
 class DealsDetailView(DetailView):
     model = Acuerdo
     context_object_name = 'deal'
@@ -554,3 +548,53 @@ class PostCloseView( View):
         publicacion.estado = False
         publicacion.save()
         return redirect('core:post')
+
+
+
+
+class SesionCreateView(CreateView):
+    model = Sesion
+    form_class = SesionCreate
+    template_name = 'core/sesionCreate.html'
+
+    def get_acuerdo(self):
+        return get_object_or_404(Acuerdo, pk=self.kwargs['pk'])
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['acuerdo'] = self.get_acuerdo()
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('core:deals-detail', kwargs={'pk': self.kwargs['pk']})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['acuerdo'] = self.get_acuerdo()
+        return context
+
+    def form_valid(self, form):
+        form.instance.acuerdo = self.get_acuerdo()  # <- este cambio
+        return super().form_valid(form)
+
+class SesionDetailView(DetailView):
+    model = Sesion
+    template_name = 'core/sesion_detail.html'
+    success_url = reverse_lazy('core:sessions')
+    context_object_name = 'session'
+
+
+
+
+
+
+
+class SesionLisView(ListView):
+    model = Sesion
+    context_object_name = 'sessions'
+    template_name = 'core/sesioneslist.html'
+
+    def get_queryset(self):
+        return Sesion.objects.filter(
+            Q(acuerdo__usuario_a=self.request.user) | Q(acuerdo__usuario_b=self.request.user)
+        )
