@@ -254,6 +254,12 @@ class Publicacion(models.Model):
     autor = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='publicaciones', related_query_name='publicacion') # It has no-sense if the post remains when the user closes it's account, as you won't be able to contact him.
     habilidad = models.ForeignKey(Habilidad, on_delete=models.CASCADE, related_name='publicaciones', related_query_name='publicacion') # It has no-sense if the post remains when the skill is removed, as you won't be able to SkillSwap.
 
+
+
+
+
+    def __str__(self):
+        return self.tipo
 class Acuerdo(models.Model):
     """
     Model for an agreement in SkillSwap
@@ -378,6 +384,7 @@ class Acuerdo(models.Model):
                 name = 'unique_acuerdo_activo'
             )
         ] # Used due to unique_together is deprecated.
+
 
 def validate_date_today_or_later(value):
     """
@@ -523,3 +530,4 @@ class Sesion(models.Model):
         verbose_name = 'sesion'
         verbose_name_plural = 'sesiones'
         ordering = ('fecha',)
+
