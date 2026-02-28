@@ -14,8 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.shortcuts import redirect
 from django.urls import path, include
+from django.http import Http404
+
+original_login = admin.site.login
+
+def secure_admin_login(request, **kwargs):
+    if request.user.is_authenticated and not request.user.is_staff and not request.user.is_superuser:
+        messages.error(request, 'No tienes permisos para acceder al panel de administración.')
+        return redirect('core:login')
+    return original_login(request, **kwargs)
+
+admin.site.login = secure_admin_login
 
 urlpatterns = [
     path('admin/', admin.site.urls),

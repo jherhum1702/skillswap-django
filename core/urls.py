@@ -24,5 +24,5 @@ urlpatterns = [
     path('deals/<int:pk>/start/', DealsUpdateStartView.as_view(), name='deals-start'),
     path('posts/create/', PostCreateview.as_view(), name='post-create'),
     path('posts/<int:pk>/edit/', PostUpdateView.as_view(), name='post-update'),
-path('posts/<int:pk>/close/', PostCloseView.as_view(), name='post-close'),
+    path('posts/<int:pk>/close/', PostCloseView.as_view(), name='post-close'),
 ]
