@@ -1,8 +1,13 @@
+from symtable import Class
+
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import Group
 from django.contrib.auth import login
 from django.contrib.sessions.models import Session
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count, Case, When, IntegerField, F
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
@@ -16,6 +21,36 @@ from django.views.decorators.http import require_http_methods
 from .session_manager import SessionManager
 
 # Create your views here.
+
+
+
+
+class AutororOModerarorMixin:
+    class AutorOModeradorMixin:
+        def dispatch(self, request, *args, **kwargs):
+            obj = self.get_object()
+            if obj.autor != request.user and not request.user.is_staff:
+                raise PermissionDenied
+            return super().dispatch(request, *args, **kwargs)
+
+
+class AcuerdoUpdateParticipant:
+    class ParticipanteAcuerdoMixin:
+        def dispatch(self, request, *args, **kwargs):
+            obj = self.get_object()
+            if obj.usuario_a != request.user and obj.usuario_b != request.user:
+                raise PermissionDenied
+            return super().dispatch(request, *args, **kwargs)
+
+class ModeradorOAdminMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_authenticated:
+            return self.handle_no_permission()
+        if not (user.is_staff or user.groups.filter(name='Moderador').exists()):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
 
 class HomeView(ListView):
     """
@@ -154,7 +189,7 @@ class Postlistview(ListView):
     template_name = 'core/post_list.html'
     context_object_name = 'posts'
 
-class PostDetailview(DetailView):
+class PostDetailview(LoginRequiredMixin, DetailView):
     model = Publicacion
     template_name = 'core/post_detail.html'
     context_object_name = 'post'
@@ -362,7 +397,7 @@ def change_preference(request):
 
 
 
-class StatisticsView(TemplateView):
+class StatisticsView(ModeradorOAdminMixin, TemplateView):
     template_name = 'core/statistics.html'
 
     def get_context_data(self, **kwargs):
@@ -390,7 +425,7 @@ class StatisticsView(TemplateView):
         return context
 
 
-class DealsCreateView(CreateView):
+class DealsCreateView(LoginRequiredMixin, CreateView):
     model = Acuerdo
     form_class = DealsPost
     template_name = 'core/dealsCreate.html'
@@ -433,7 +468,7 @@ class DealsCreateView(CreateView):
 
 
 
-class DealsUpdateAccepView(View):
+class DealsUpdateAccepView(LoginRequiredMixin,AcuerdoUpdateParticipant ,View):
     def post(self, request, pk):
         acuerdo = get_object_or_404(Acuerdo, pk=pk)
         if request.user == acuerdo.usuario_b:
@@ -443,20 +478,20 @@ class DealsUpdateAccepView(View):
         acuerdo.save()
         return redirect('core:deals')
 
-class DealsUpdateCancelView(View):
+class DealsUpdateCancelView(LoginRequiredMixin,AcuerdoUpdateParticipant ,View):
     def post(self, request, pk):
         acuerdo = get_object_or_404(Acuerdo, pk=pk)
         acuerdo.estado = 'CANCELADO'
         acuerdo.save()
         return redirect('core:deals')
 
-class DealsUpdateFinView(View):
+class DealsUpdateFinView(LoginRequiredMixin,AcuerdoUpdateParticipant ,View):
     def post(self, request, pk):
         acuerdo = get_object_or_404(Acuerdo, pk=pk)
         acuerdo.estado = 'FINALIZADO'
         acuerdo.save()
         return redirect('core:deals')
-class DealsUpdateStartView(View):
+class DealsUpdateStartView(LoginRequiredMixin,AcuerdoUpdateParticipant ,View):
     def post(self, request, pk):
         acuerdo = get_object_or_404(Acuerdo, pk=pk)
         acuerdo.estado = 'EN CURSO'
@@ -464,7 +499,8 @@ class DealsUpdateStartView(View):
         return redirect('core:deals')
 
 
-class DealsDetailView(DetailView):
+
+class DealsDetailView(LoginRequiredMixin,AcuerdoUpdateParticipant ,DetailView):
     model = Acuerdo
     context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
@@ -480,7 +516,7 @@ class DealsDetailView(DetailView):
         return context
 
 
-class DealsListView(ListView):
+class DealsListView(LoginRequiredMixin, ListView):
     model = Acuerdo
     context_object_name = 'deals'
     template_name = 'core/dealslist.html'
@@ -496,7 +532,7 @@ class DealsListView(ListView):
                 default=5, output_field=IntegerField(),)).order_by('orden') # I do this because of annotate requirement, as I was going to do multiple queries and order them.
 
 
-class PostCreateview(CreateView):
+class PostCreateview(LoginRequiredMixin,CreateView):
     model = Publicacion
     form_class = PostCreate
     success_url = reverse_lazy('core:post')
@@ -522,7 +558,7 @@ class PostCreateview(CreateView):
 
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin,AutororOModerarorMixin, UpdateView):
     model = Publicacion
     form_class = PostCreate
     context_object_name = 'post'
@@ -545,7 +581,7 @@ class PostUpdateView(UpdateView):
         )
         return context
 
-class PostCloseView( View):
+class PostCloseView(LoginRequiredMixin,AutororOModerarorMixin,View):
     def post(self, request, pk):
         publicacion = get_object_or_404(Publicacion, pk=pk, autor=request.user)
         publicacion.estado = False
