@@ -459,3 +459,23 @@ class PostCreate(forms.ModelForm):
             if not self.usuario.perfil.habilidades.filter(pk=habilidad.pk).exists():
                 raise forms.ValidationError('Solo puedes ofrecer habilidades que tienes en tu perfil.')
         return cleaned_data
+
+
+
+
+class SesionCreate(forms.ModelForm):
+    def __init__(self, *args, acuerdo=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if acuerdo:
+            self.instance.acuerdo = acuerdo
+
+    class Meta:
+        model = Sesion
+        fields = ['fecha', 'duracion_real', 'resumen', 'asistencia_user_a', 'asistencia_user_b']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'duracion_real': forms.NumberInput(attrs={'class': 'form-control'}),
+            'resumen': forms.Textarea(attrs={'class': 'form-control','rows':3}),
+            'asistencia_user_a': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'asistencia_user_b': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

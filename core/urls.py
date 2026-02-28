@@ -25,4 +25,7 @@ urlpatterns = [
     path('posts/create/', PostCreateview.as_view(), name='post-create'),
     path('posts/<int:pk>/edit/', PostUpdateView.as_view(), name='post-update'),
     path('posts/<int:pk>/close/', PostCloseView.as_view(), name='post-close'),
+    path('deals/<int:pk>/sessions/create/', SesionCreateView.as_view(), name='session-create'),
+    path('sessions/<int:pk>/', SesionDetailView.as_view(), name='session-detail'),
+    path('sessions/', SesionLisView.as_view(), name='sessions'),
 ]
