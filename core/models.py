@@ -6,6 +6,10 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 # Create your models here.
 
 class Habilidad(models.Model):
@@ -531,3 +535,26 @@ class Sesion(models.Model):
         verbose_name_plural = 'sesiones'
         ordering = ('fecha',)
 
+@receiver(post_save, sender=Usuario)
+def crear_perfil_usuario(sender, instance, created, **kwargs):
+    """
+    Create a profile for a new user.
+
+    Automatically creates a Perfil whenever a new Usuario is registered.
+
+    Args:
+        sender (type): The model class that sent the signal (Usuario).
+        instance (Usuario): The actual instance being saved.
+        created (bool): True if a new record was created, False if updated.
+        **kwargs: Additional keyword arguments passed by the signal.
+
+    Example:
+            >>> usuario = Usuario.objects.create(
+            ...     first_name="Paco",
+            ...     username="pacogamer30",
+            ...     email="pacotest@gmail.com"
+            ... )
+            >>> Perfil.objects.get(usuario=usuario)  # Profile created automatically
+    """
+    if created:
+        Perfil.objects.create(usuario=instance)
