@@ -160,8 +160,7 @@ class PostDetailview(DetailView):
     context_object_name = 'post'
 
     def get_object(self, queryset=None):
-        return Publicacion.objects.annotate(total_proposals=Count('autor__acuerdo_a',filter=Q(autor__acuerdo_a__estado='PROPUESTO'))).get(pk=self.kwargs['pk']) # Need to check if it's USUARIO_A or B
-
+        return Publicacion.objects.annotate(total_proposals=Count('acuerdo', filter=Q(acuerdo__estado='PROPUESTO'))).get(pk=self.kwargs['pk'])
 
 class CustomLogin(LoginView):
     """
@@ -415,6 +414,7 @@ class DealsCreateView(CreateView):
         acuerdo.usuario_a = self.get_usuario_a()
         acuerdo.usuario_b = self.request.user
         acuerdo.habilidad_tradea_a = self.get_publicacion().habilidad
+        acuerdo.publicacion = self.get_publicacion()  # ← añadir esto
         try:
             acuerdo.save()
         except IntegrityError:
@@ -476,9 +476,11 @@ class DealsDetailView(DetailView):
     success_url = reverse_lazy('core:deals')
 
     def get_context_data(self, **kwargs):
-        context = super(DealsDetailView, self).get_context_data(**kwargs)
-        context['deal'] = Acuerdo.objects.annotate(total_mins=F('semanas') * F('sesiones_por_semana') * F('mins_sesion')).get(pk=self.kwargs['pk'])
+        context = super().get_context_data(**kwargs)
+        context['estado'] = 'Activa' if self.object.estado else 'Cerrada'
+        context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.autor,estado='PROPUESTO').count()
         return context
+
 
 class DealsListView(ListView):
     model = Acuerdo

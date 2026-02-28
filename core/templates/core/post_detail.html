@@ -15,10 +15,10 @@
     <div class="d-flex align-items-center gap-3 text-muted small mb-3">
       <span><i class="fas fa-user me-1"></i>{{ post.autor }}</span>
       <span><i class="fas fa-calendar me-1"></i>{{ post.fecha_modificacion|date:"d M Y" }}</span>
-      {% if post.estado == "ACTIVO" %}
-        <span class="badge bg-success">{{ post.estado }}</span>
+      {% if post.estado %}
+        <span class="badge bg-success">Activa</span>
       {% else %}
-        <span class="badge bg-secondary">{{ post.estado }}</span>
+        <span class="badge bg-secondary">Cerrada</span>
       {% endif %}
     </div>
 
