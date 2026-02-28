@@ -31,6 +31,11 @@ class Habilidad(models.Model):
     def __str__(self):
         return self.nombre
 
+    class Meta:
+        verbose_name = 'habilidad'
+        verbose_name_plural = 'habilidades'
+        ordering = ['nombre']
+
 class Usuario(AbstractUser):
     """
     Model for users in SkillSwap
@@ -60,6 +65,8 @@ class Usuario(AbstractUser):
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "first_name", 'last_name']
 
+
+
     def __str__(self):
         """
         Returns the string representation of the user.
@@ -87,7 +94,7 @@ class Usuario(AbstractUser):
         db_table = 'usuario'
         verbose_name = 'usuario'
         verbose_name_plural = 'usuarios'
-        ordering = ['first_name']
+        ordering = ['first_name', 'last_name']
 
 
 def timezone_choices():
@@ -159,6 +166,13 @@ class Perfil(models.Model):
 
     habilidades = models.ManyToManyField(Habilidad, blank=True, related_name='perfil', related_query_name='perfil')
 
+    def __str__(self):
+        return f"Perfil de {self.usuario.username}"
+
+    class Meta:
+        verbose_name = 'perfil'
+        verbose_name_plural = 'perfiles'
+        ordering = ('usuario',)
 
     def clean(self):
         """
@@ -255,11 +269,15 @@ class Publicacion(models.Model):
     habilidad = models.ForeignKey(Habilidad, on_delete=models.CASCADE, related_name='publicaciones', related_query_name='publicacion') # It has no-sense if the post remains when the skill is removed, as you won't be able to SkillSwap.
 
 
-
+    class Meta:
+        verbose_name = 'publicacion'
+        verbose_name_plural = 'publicaciones'
+        ordering = ('-fecha_creacion',)
 
 
     def __str__(self):
-        return self.tipo
+        return f"{self.autor.username} - {self.tipo.capitalize()} - {self.habilidad} "
+
 class Acuerdo(models.Model):
     """
     Model for an agreement in SkillSwap
@@ -332,6 +350,9 @@ class Acuerdo(models.Model):
 
     habilidad_tradea_a = models.ForeignKey(Habilidad, on_delete=models.CASCADE, related_name='acuerdos_a', related_query_name='acuerdos_a') # It has no-sense if the post remains when the skill is removed, as you won't offer/search for a Null skill.
     habilidad_tradea_b = models.ForeignKey(Habilidad, on_delete=models.CASCADE, related_name='acuerdos_b', related_query_name='acuerdos_b') # It has no-sense if the post remains when the skill is removed, as you won't offer/search for a Null skill.
+
+    def __str__(self):
+        return f"{self.usuario_a} da {self.habilidad_tradea_a} <-> {self.usuario_b} da {self.habilidad_tradea_b}"
 
     def clean(self):
         """
@@ -475,6 +496,9 @@ class Sesion(models.Model):
     estado = models.BooleanField(default=False)     # True if Active, otherwise False. Python is faster checking for a boolean rather than a string
 
     acuerdo = models.ForeignKey(Acuerdo, on_delete=models.CASCADE, related_name='sesiones', related_query_name='sesion')
+
+    def __str__(self):
+        return f"{self.fecha}, {self.acuerdo}"
 
     def clean(self):
         """
