@@ -472,13 +472,17 @@ class DealsDeleteView(DeleteView):
 
 class DealsDetailView(DetailView):
     model = Acuerdo
+    context_object_name = 'deal'
     template_name = 'core/dealsDetail.html'
     success_url = reverse_lazy('core:deals')
+
+    def get_queryset(self):
+        return Acuerdo.objects.annotate(total_mins=F('semanas') * F('sesiones_por_semana') * F('mins_sesion'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['estado'] = 'Activa' if self.object.estado else 'Cerrada'
-        context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.autor,estado='PROPUESTO').count()
+        context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.usuario_a, estado='PROPUESTO').count()
         return context
 
 
