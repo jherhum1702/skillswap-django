@@ -1,8 +1,17 @@
 from django.contrib.auth.views import LogoutView
-from django.urls import path
+from django.db import router
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
 from .views import *
 app_name = 'core'
 
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'publicaciones', PublicacionViewSet)
+router.register(r'acuerdos', AcuerdoViewSet)
+router.register(r'sesiones', SesionViewSet)
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('accounts/login/', CustomLogin.as_view(), name='login'),
@@ -28,4 +37,5 @@ urlpatterns = [
     path('deals/<int:pk>/sessions/create/', SesionCreateView.as_view(), name='session-create'),
     path('sessions/<int:pk>/', SesionDetailView.as_view(), name='session-detail'),
     path('sessions/', SesionLisView.as_view(), name='sessions'),
+    path('api/', include(router.urls)),
 ]
