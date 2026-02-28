@@ -15,6 +15,13 @@ from .forms import *
 from django.views.decorators.http import require_http_methods
 from .session_manager import SessionManager
 
+from rest_framework import viewsets
+
+from .serializers import *
+
+from rest_framework.permissions import IsAdminUser
+
+
 # Create your views here.
 
 class HomeView(ListView):
@@ -614,30 +621,22 @@ class SesionLisView(ListView):
 
 
 
-
-
-
-
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from .serializers import *
-
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 class PublicacionViewSet(viewsets.ModelViewSet):
     queryset = Publicacion.objects.all()
     serializer_class = PublicacionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 class AcuerdoViewSet(viewsets.ModelViewSet):
     queryset = Acuerdo.objects.all()
     serializer_class = AcuerdoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 class SesionViewSet(viewsets.ModelViewSet):
     queryset = Sesion.objects.all()
     serializer_class = SesionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
