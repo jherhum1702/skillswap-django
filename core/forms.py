@@ -431,3 +431,31 @@ class DealsPostUpdate(forms.ModelForm):
     }
 
 
+
+
+
+class PostCreate(forms.ModelForm):
+    def __init__(self, *args, usuario=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.usuario = usuario
+        self.fields['tipo'].widget.attrs['class'] = 'form-select'
+        self.fields['habilidad'].widget.attrs['class'] = 'form-select'
+        self.fields['descripcion'].widget.attrs['class'] = 'form-control'
+        # Por defecto muestra todas
+        self.fields['habilidad'].queryset = Habilidad.objects.all()
+
+    class Meta:
+        model = Publicacion
+        fields = ['tipo','descripcion','habilidad']
+        widgets = {'tipo': forms.Select(attrs={'class': 'form-control'}),
+                   'descripcion': forms.Textarea(attrs={'class': 'form-control'}),
+                   'habilidad': forms.Select(attrs={'class': 'form-control'}),}
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tipo = cleaned_data.get('tipo')
+        habilidad = cleaned_data.get('habilidad')
+        if tipo == 'OFREZCO' and self.usuario:
+            if not self.usuario.perfil.habilidades.filter(pk=habilidad.pk).exists():
+                raise forms.ValidationError('Solo puedes ofrecer habilidades que tienes en tu perfil.')
+        return cleaned_data
