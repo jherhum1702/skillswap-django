@@ -434,7 +434,6 @@ class DealsPostUpdate(forms.ModelForm):
 
 
 
-
 class PostCreate(forms.ModelForm):
     def __init__(self, *args, usuario=None, **kwargs):
         super().__init__(*args, **kwargs)

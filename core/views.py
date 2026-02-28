@@ -479,7 +479,7 @@ class DealsDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['estado'] = 'Activa' if self.object.estado else 'Cerrada'
-        context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.autor,estado='PROPUESTO').count()
+        context['total_proposals'] = Acuerdo.objects.filter(usuario_a=self.object.usuario_a, estado='PROPUESTO').count()
         return context
 
 
