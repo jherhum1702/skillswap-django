@@ -203,12 +203,13 @@ class Command(BaseCommand):
             if created:
                 usuario.set_password(datos['password'])
                 usuario.save()
-                Perfil.objects.create(
-                    usuario=usuario,
-                    biografia=datos['biografia'],
-                    zona_horaria=datos['zona_horaria'],
-                    disponibilidad=datos['disponibilidad'],
-                )
+                # The profile is already created by the post_save signal.
+                # We only need to update the extra fields.
+                perfil = usuario.perfil
+                perfil.biografia = datos['biografia']
+                perfil.zona_horaria = datos['zona_horaria']
+                perfil.disponibilidad = datos['disponibilidad']
+                perfil.save()
                 self.stdout.write(self.style.SUCCESS(f'  ✓ User "{usuario.username}" created successfully.'))
 
         # SKILLS PER PROFILE
